@@ -25,3 +25,22 @@ main{padding:38px;max-width:1450px}.hero{gap:28px;padding:10px 0 32px}.eyebrow{f
 @media print{body{background:#fff!important}.workspace{margin:0}.topbar,.sidebar,.footer,.article-actions,.article-toc,.related,.back-link{display:none!important}.article-body section>h2{background:#eee!important;font-size:17pt;border-left:3px solid #999}.article-body p,.article-body li{font-size:11pt;line-height:1.65}.mode-tabs,.mode-controls{display:none!important}.mode-explorer{box-shadow:none;border:1px solid #aaa;break-inside:avoid}.mode-stage{max-height:250px}.mode-stage svg{max-height:250px!important}.mode-insight{min-height:0}.diagram-note{font-size:8pt!important}.spotlight,.teaching-figure{box-shadow:none;break-inside:avoid}.teaching-figure img{max-height:320px!important}.deep-dive,.checkpoint{break-inside:avoid}.compare-grid{grid-template-columns:repeat(3,1fr)}.compare-card p{font-size:9pt}.compare-card h3{font-size:10pt}.spotlight p{font-size:12pt!important}.article-grid{grid-template-columns:1fr}ol.steps>li{box-shadow:none}.article-body>h1{font-size:24pt}.article-body>h1:after{display:none}}
 
 .brand small{font-size:8px;letter-spacing:.3px;white-space:nowrap}.figure-zoom{display:block;position:relative}.figure-zoom>span{position:absolute;right:12px;bottom:12px;background:#fffdf4ed;border:1px solid #b7cbb0;border-radius:18px;padding:5px 10px;color:#3f6b4d;font-size:10px;box-shadow:0 2px 0 #d8e3cb}.figure-zoom:hover>span{background:#e7f1d8}.diagram-note a{text-decoration:underline;text-underline-offset:3px}.figure-dialog{width:min(1100px,96vw);max-width:96vw;border:2px solid #8ead80;border-radius:19px;padding:0;background:#fffcf3;color:#254f3a;box-shadow:0 18px 60px #163b3060}.figure-dialog::backdrop{background:#173526aa}.figure-dialog-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:15px 20px;border-bottom:1px solid #c9d9c0}.figure-dialog-toolbar h2{font-size:18px;line-height:1.7;margin:0}.figure-dialog-toolbar button{background:#e7efdc;border-radius:25px;padding:9px 15px;font-size:12px;color:#35573b;white-space:nowrap}.figure-dialog-scroll{overflow:auto;max-height:70vh;background:#faf9f0}.figure-dialog-scroll img{width:100%;min-width:800px;height:auto;display:block}.figure-dialog-caption{padding:12px 18px;font-size:12px;margin:0;border-top:1px solid #d1dfc8;line-height:1.8}@media(max-width:680px){.mode-stage svg text{font-size:23px}.figure-dialog-toolbar{padding:12px}.figure-dialog-toolbar h2{font-size:14px}.figure-dialog-caption{font-size:11px}.figure-dialog-scroll{max-height:65vh}.figure-zoom>span{font-size:9px;right:8px;bottom:8px;padding:4px 8px}.brand small{font-size:9px}}@media print{.figure-zoom>span,.figure-dialog{display:none!important}}
+
+/* V3: shared analytic labs and topic navigation */
+.lab-stage svg{display:block;width:100%;height:auto}
+.lab-stage [hidden]{display:none!important}
+.lab-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}
+.lab-stats>div{background:#fffdf5;border:1px solid #dbe2d0;border-radius:14px;padding:14px;text-align:center}
+.lab-stats span,.lab-stats small{display:block;color:#61725e;font-size:.82rem}
+.lab-stats b{display:block;color:#315b42;font-size:1.55rem;margin:5px 0;font-variant-numeric:tabular-nums}
+.lab-controls{display:flex;flex-wrap:wrap;align-items:center;gap:18px}
+.lab-controls label{flex:1 1 160px;display:grid;gap:8px;font-size:.88rem;min-width:0}
+.lab-controls input{width:100%;accent-color:#527b56}
+.lab-controls output{font-variant-numeric:tabular-nums;color:#315b42}
+.lab-insight{background:#f3ebd1;padding:14px 18px;border-radius:12px;min-height:3em;font-size:.93rem}
+.module-selector{display:flex;gap:12px;align-items:center;margin:10px 0 18px;font-weight:700}
+.module-selector select{font:inherit;color:#365c43;background:#fffdf5;border:1px solid #cdd9c7;border-radius:10px;padding:9px 36px 9px 12px}
+#playground{scroll-margin-top:85px}
+.hero-visual>img{width:100%;height:auto}
+@media(max-width:600px){.lab-stats{gap:6px}.lab-stats>div{padding:9px 3px}.lab-stats b{font-size:1.15rem}.lab-stats span,.lab-stats small{font-size:.72rem}.lab-controls{gap:12px}.hero h1{font-size:2.2rem}}
+@media print{.lab-controls{display:none}.lab-stage{break-inside:avoid}.lab-stats{break-inside:avoid}}
