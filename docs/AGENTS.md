@@ -1,7 +1,7 @@
 # ANSYS Lab Notes — AI 開發與內容規則
 
 ## 1. 專案目的與讀者
-建立可傳承的實驗室模擬學習站，讓初學者依序理解觀念、完成操作、排除問題。第一版以 ANSYS Workbench 2024 R2 的 Mechanical 模態分析為主；未來可加入 Maxwell、LS-DYNA、Fluent。不要將本網站寫成已獲 ANSYS 認證的官方教材。
+建立可傳承的實驗室模擬學習站，讓初學者依序理解觀念、完成操作、排除問題。目前包含 2024 R2 的 Mechanical 模態分析、Maxwell 靜電場、LS-DYNA 顯式碰撞與 Fluent 層流入門。Mechanical、LS-DYNA 與 Fluent 從 Workbench 進入；Maxwell 在 Electronics Desktop 操作，不混用各軟體選單。不要將本網站寫成已獲 ANSYS 認證的官方教材。
 
 ## 2. 每次工作先讀
 先讀本檔、README.md、content/schema.md，再查看最接近的既有文章與 templates/article.json。先確認修改範圍；保留無關內容。沒有實機驗證證據時，不得標記為已操作成功。
@@ -38,7 +38,7 @@ verification 僅可為「文件查證／待實機驗證」或「實機驗證」�
 
 ## 8. 新增一篇文章的確切流程
 1. 複製 templates/article.json 至 content/articles/<slug>.json，依 schema.md 填妥內容。
-2. 設定 category、kind 與 related；閱讀並查證來源。新增分類才修改 content/modules.json。
+2. 設定 category、kind 與 related；閱讀並查證來源。在 content/modules.json 的 route 指定閱讀順序；新增分類時填妥 id、name、tool、desc、ready、route、lab、cover、environment。
 3. 執行 python scripts/build.py。生成器會自動更新首頁、分類頁、搜尋資料及文章頁，不可手動複製多份導覽。
 4. 執行 python scripts/check.py。錯誤必須修正再交付。
 5. 執行 python -m http.server 8000 --directory docs，以瀏覽器確認新增文章、搜尋、相關文章連結與手機顯示。無法進行瀏覽器檢查時須如實回報。
@@ -51,5 +51,13 @@ verification 僅可為「文件查證／待實機驗證」或「實機驗證」�
 ## 10. 圖解與互動教學規則（2026-11-16 更新）
 每篇至少一個與內容直接相關的圖解或互動元件；整個網站不可重複使用同一張懸臂樑圖取代所有說明。先以一句話摘要帶入，再用觀察提示引導讀圖，必要時用可展開區塊補充推導。使用 **粗體** 與 ==螢光標記== 強調少量關鍵詞，禁止整段標色。
 彎曲振型依 Euler–Bernoulli 解析式繪製，固定端位移與斜率須為零；較高同方向彎曲振型須呈現相應內部節點。Y 向與 Z 向彎曲、不同彎曲階次與扭轉概念要區分，不可直接將圖例 A～E 宣稱為 3D ANSYS 前五階排序。扭轉若只是概念插值，明確寫「概念示意」。
-所有互動圖明列來源、展示放大與時間縮放；顏色表示正規化相對位移，不是真實 mm、應力或求解結果。無 ANSYS 結果時，圖例統一寫「教學示意」，不套用假的 ANSYS 介面、結果頻率或日期。自動動畫預設暫停，使用者按播放才啟動，提供暫停／型態切換／展示倍率／相位控制，支援減少動態與列印靜態圖。
+模態互動圖明列來源、展示放大與時間縮放；顏色表示正規化相對位移，不是真實 mm、應力或求解結果。無 ANSYS 結果時，圖例統一寫「教學示意」，不套用假的 ANSYS 介面、結果頻率或日期。自動動畫預設暫停，使用者按播放才啟動，提供暫停／型態切換／展示倍率／相位控制，支援減少動態與列印靜態圖。
 可用的新內容區塊：spotlight、figure、modes、compare、details、checkpoint；規格見 content/schema.md，渲染邏輯集中在 scripts/visuals.py。assets/diagrams/ 是可重建的原創 SVG，scripts/make_diagrams.py 管理幾何與振型數學。
+
+## 11. 多物理專區規則（V3）
+四個分類都必須有明確入門順序、觀念、可重建操作案例與排錯文章，不得僅切換分類標籤或重用懸臂樑內容。新增分類資料由 content/modules.json 驅動，首頁、搜尋與分類頁不得寫死為模態分析。
+每個專區至少一個相關互動：模態振型、理想平行板電場、單自由度彈簧接觸能量、平行板通道解析速度剖面。所有公式與顯示值清楚標記為解析或簡化模型，不宣稱為 ANSYS 結果。
+Maxwell 分開說明電位與電場，E=ΔV/d 僅適用於本文理想化均勻間隙；不可把所有外邊界稱作接地。LS-DYNA 使用其 Workbench 系統，區分初始速度與持續施加的速度拘束，區分求解時間步與輸出間隔；不用質量縮放掩蓋不合理結果。Fluent 本例是平面平行板流而非圓管，充分發展層流中心速度為平均的 1.5 倍，入口發展段不直接套用全長壓降公式。
+新互動集中在 scripts/labs.py、assets/labs.js 與 assets/lab-math.js；圖解由 scripts/make_multiphysics_diagrams.py 產生。新增互動須驗證物理不變量與單位轉換。
+
+修改振型或新互動後，分別執行 node scripts/test_modes.cjs 與 node scripts/test_labs.cjs。lab 區塊僅允許 electrostatic、impact、channel，透過共用渲染器產生。圖例需說清楚顏色、箭頭與正規化的意義。

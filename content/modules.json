@@ -3,28 +3,61 @@
     "id": "modal",
     "name": "模態分析",
     "tool": "Mechanical",
-    "desc": "從固有頻率與振型出發，建立可重現的結構動力學分析流程。",
-    "ready": true
+    "desc": "從固有頻率與振型出發，完成懸臂樑，再學會近零頻率與網格檢查。",
+    "ready": true,
+    "route": [
+      "modal-basics",
+      "modal-cantilever",
+      "modal-zero-frequency",
+      "modal-mesh-check"
+    ],
+    "lab": "modes",
+    "cover": "bend-vs-twist",
+    "environment": "Workbench → Mechanical"
   },
   {
     "id": "maxwell",
     "name": "電磁場分析",
     "tool": "Maxwell",
-    "desc": "規劃整理材料、激勵、邊界與電磁場結果；目前尚未收錄教學。",
-    "ready": false
+    "desc": "從電位與電場出發，完成理想平行板靜電案例，再看邊界與尖角問題。",
+    "ready": true,
+    "route": [
+      "maxwell-basics",
+      "maxwell-capacitor",
+      "maxwell-field-check"
+    ],
+    "lab": "electrostatic",
+    "cover": "maxwell-potential",
+    "environment": "Electronics Desktop → Maxwell 2D"
   },
   {
     "id": "ls-dyna",
     "name": "顯式動力分析",
     "tool": "LS-DYNA",
-    "desc": "規劃整理接觸、材料、時間步長與動態結果；目前尚未收錄教學。",
-    "ready": false
+    "desc": "從時間、慣性與接觸出發，完成彈性方塊碰撞，再檢查能量與時間步。",
+    "ready": true,
+    "route": [
+      "lsdyna-basics",
+      "lsdyna-impact",
+      "lsdyna-stability"
+    ],
+    "lab": "impact",
+    "cover": "impact-setup",
+    "environment": "Workbench → LS-DYNA"
   },
   {
     "id": "fluent",
     "name": "流體分析",
     "tool": "Fluent",
-    "desc": "規劃整理流體域、網格、邊界條件與收斂；目前尚未收錄教學。",
-    "ready": false
+    "desc": "從流體域與邊界出發，完成平行板通道層流，再一起檢查收斂與守恆。",
+    "ready": true,
+    "route": [
+      "fluent-basics",
+      "fluent-channel",
+      "fluent-convergence"
+    ],
+    "lab": "channel",
+    "cover": "fluent-channel",
+    "environment": "Workbench → Fluent"
   }
 ]

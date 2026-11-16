@@ -1,0 +1,175 @@
+{
+  "slug": "lsdyna-stability",
+  "category": "ls-dyna",
+  "kind": "troubleshooting",
+  "title": "算很慢、穿透、能量飆高：從哪裡查？",
+  "summary": "把最小元素、接觸、單位與能量分開排查，避免用加速設定掩蓋模型問題。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 9,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "能讀 LS-DYNA 訊息與時間歷程"
+  ],
+  "tags": [
+    "時間步",
+    "Hourglass",
+    "質量縮放",
+    "能量"
+  ],
+  "sections": [
+    {
+      "id": "symptom",
+      "title": "問題現象",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "==求解成功==只是第一關；還要確認它用合理的方式描述運動。"
+        },
+        {
+          "type": "p",
+          "text": "常見現象是時間步越跑越小、物件相互穿過、局部元素畸變，或能量突然異常跳動。此處不是某個模型已成功修復的紀錄。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/explicit-steps.svg",
+          "title": "先區分計算步與結果影格",
+          "alt": "先區分計算步與結果影格",
+          "caption": "增加結果影格不會自動修正過大的求解步或接觸問題。"
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "title": "適用情境",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "針對此站的低速顯式接觸入門模型。爆炸、失效、流固耦合與高應變率材料，需要各自的專門設定與驗證，不直接沿用本案例。"
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "title": "檢查順序",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "單位與初始條件",
+              "text": "核對幾何、密度、彈性模數、速度與時間單位。特別分清 mm/s 與 m/s、ms 與 s，查看初始速度是否施加在正確 part。"
+            },
+            {
+              "title": "接觸與幾何",
+              "text": "檢查起始間隙、重疊、重複接觸與黏結。若出現穿透，先確認接觸範圍與表面，再討論接觸控制參數。"
+            },
+            {
+              "title": "最小元素與畸變",
+              "text": "查看很小、很扁或已畸變的元素是否主導時間步。先處理幾何碎面和網格品質，不能只把輸出存得更少來加速。"
+            },
+            {
+              "title": "能量與 hourglass",
+              "text": "對使用低積分元素的模型，檢查 Hourglass（沙漏）能量與變形形狀，並比較內能與動能。三角／四面體等不同元素有不同問題，不可把同一套沙漏參數套給所有元素。"
+            },
+            {
+              "title": "質量縮放敏感度",
+              "text": "若已使用 Mass Scaling（質量縮放），檢查增加的質量、分布與慣性影響，並以較少或不縮放的結果作對照。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fix",
+      "title": "處理方式",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": [
+            "觀察",
+            "先做什麼"
+          ],
+          "rows": [
+            [
+              "剛開始就有很大接觸能",
+              "查初始穿透、接觸重複與接觸厚度。"
+            ],
+            [
+              "計算慢但形狀合理",
+              "查最小元素與穩定步長；不要先改材料密度。"
+            ],
+            [
+              "棋盤狀或不合理皺折",
+              "查元素公式、沙漏控制與網格。"
+            ],
+            [
+              "修改設定後能量變好",
+              "仍須比對運動、反力與網格敏感度，不能只挑好看的曲線。"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "title": "完成條件",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "模型的單位、接觸與初始條件都能對應實際問題。",
+            "能量收支可解釋，非物理項沒有主導關注結果。",
+            "網格、時間控制與任何質量縮放都有比較紀錄。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "checkpoint",
+          "title": "沙漏能量很小，就代表模型一定正確嗎？",
+          "items": [
+            "不代表。還需要檢查材料、接觸、拘束、能量收支、網格敏感度與你真正關心的量。"
+          ]
+        },
+        {
+          "type": "list",
+          "items": [
+            "先找原因，再調控制參數。",
+            "不要把任何經驗百分比當成完整驗證。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS LS-DYNA — Accessing Results",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/exd_ag_lsdyna_results.html",
+      "version": "2024 R2",
+      "support": "全域能量、接觸力、反力與時間歷程輸出。"
+    },
+    {
+      "title": "ANSYS LS-DYNA Knowledge — Mass Scaling",
+      "url": "https://lsdyna.ansys.com/mass-scaling/",
+      "version": "原廠方法說明，非 2024 R2 介面",
+      "support": "質量縮放改變慣性，需檢查新增質量與結果敏感度。"
+    },
+    {
+      "title": "ANSYS LS-DYNA Knowledge — Hourglass",
+      "url": "https://lsdyna.ansys.com/hourglass/",
+      "version": "原廠方法說明，非 2024 R2 介面",
+      "support": "低積分元素的非物理零能模式、能量檢查與元素選擇。"
+    }
+  ],
+  "related": [
+    "lsdyna-impact",
+    "lsdyna-basics"
+  ]
+}

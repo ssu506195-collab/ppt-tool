@@ -1,0 +1,168 @@
+{
+  "slug": "maxwell-field-check",
+  "category": "maxwell",
+  "kind": "troubleshooting",
+  "title": "最大電場一直變大，先別急著相信它",
+  "summary": "從單位、選取範圍、邊界與尖角開始，分清局部尖峰與可比較的研究量。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 8,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "能查看 Maxwell 電場圖與剖線"
+  ],
+  "tags": [
+    "尖角",
+    "最大值",
+    "網格",
+    "圓角"
+  ],
+  "sections": [
+    {
+      "id": "symptom",
+      "title": "問題現象",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "==最大值上升==不等於找到更真實的物理答案；先看它出現在哪裡。"
+        },
+        {
+          "type": "p",
+          "text": "網格加密後最大 Mag_E（電場強度）升高，位置總在尖角；或改模型後最大值幾乎不變。這篇提供排查方向，沒有任何特定模型的已驗證修復結果。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/maxwell-corners.svg",
+          "title": "尖角與圓角，需要不同的檢查策略",
+          "alt": "尖角與圓角，需要不同的檢查策略",
+          "caption": "場線只是集中趨勢的概念圖，不是求解結果，也不據此推算場強或放電門檻。"
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "title": "適用情境",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "適用於靜電場的材料介面、導體邊緣與局部場強比較。理想零半徑尖角可能造成數學奇異；是否存在、強弱與型態，仍取決於幾何、材料與邊界，不是每一個角都能用同一句話判斷。"
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "title": "檢查順序",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "先核對量與單位",
+              "text": "確認看的是 Mag_E（電場強度）而非電位；核對 V/m、kV/mm、長度 mm/m，以及座標值的單位。"
+            },
+            {
+              "title": "確認實際取值區域",
+              "text": "回到圖或報表的 Geometry（幾何）與 Selection（選取範圍），檢查最大值是否在你關心的介質內、面上或剖線上，而不是把導體內部或其他物件混入。"
+            },
+            {
+              "title": "找出尖峰位置",
+              "text": "顯示最大值附近的幾何與網格；確認是實際小半徑、零半徑尖角、材料交界，或外部邊界附近。"
+            },
+            {
+              "title": "分開比較研究量",
+              "text": "同時記錄全域最大值、圓角附近指定區域及離表面固定距離的剖線。不同位置回答不同問題，不能用離開尖角的剖線證明尖角最大值已收斂。"
+            },
+            {
+              "title": "一次改一件事",
+              "text": "固定材料與邊界，先做局部網格比較；改圓角或幾何後，再檢查新模型。不要直接沿用舊模型的收斂結論。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fix",
+      "title": "處理方式",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": [
+            "觀察",
+            "下一步"
+          ],
+          "rows": [
+            [
+              "尖峰鎖定零半徑角",
+              "依實物尺寸建圓角，再做局部網格與研究量檢查。"
+            ],
+            [
+              "離邊界近才出現異常",
+              "重新檢視區域大小、開放邊界與物理假設。"
+            ],
+            [
+              "改模型但數值不變",
+              "核對設計、setup、解、選取範圍與是否重算。"
+            ],
+            [
+              "只有離表面線穩定",
+              "只可說該線上的量較穩定；不能延伸成表面峰值已收斂。"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "title": "完成條件",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "最大位置、座標單位、取值區域能相互對上。",
+            "關注量在指定幾何與網格下有穩定性紀錄。",
+            "圓角、剖線與參數修改都有清楚命名，沒有混用舊解。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "先定義要比較的物理量與位置，再評估網格。",
+            "峰值與剖線各有用途，不能彼此取代。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Maxwell 2D Technical Notes",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/Maxwell2DTechnicalNotes.htm",
+      "version": "2024 R2",
+      "support": "Maxwell 2D 的平面／軸對稱假設與可用分析類型。"
+    },
+    {
+      "title": "ANSYS Maxwell — 2D Electrostatic Boundaries",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/2DElectrostaticBoundaries.htm",
+      "version": "2024 R2",
+      "support": "預設外邊界為 Neumann，與接地不同；自然介面與對稱邊界。"
+    },
+    {
+      "title": "Majumdar & Mukhopadhyay — Electrostatic Field near Corners and Edges",
+      "url": "https://arxiv.org/abs/physics/0604033",
+      "version": "研究論文，2006",
+      "support": "導體尖角／邊緣附近的靜電場奇異與數值計算議題。"
+    }
+  ],
+  "related": [
+    "maxwell-capacitor",
+    "maxwell-basics"
+  ]
+}

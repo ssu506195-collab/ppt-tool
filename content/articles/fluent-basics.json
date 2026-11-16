@@ -1,0 +1,169 @@
+{
+  "slug": "fluent-basics",
+  "category": "fluent",
+  "kind": "concept",
+  "title": "流體到底在哪裡流？先把流體域找出來",
+  "summary": "用平行板通道看懂流體域、入口、出口、壁面，以及速度剖面為什麼會彎起來。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 10,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "知道速度、壓力與黏度的基本單位"
+  ],
+  "tags": [
+    "流體域",
+    "入口",
+    "出口",
+    "層流",
+    "Fluent"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "CFD 要離散的是==流體佔據的空間==；管壁或外殼的實體，不會自動變成內部流體。"
+        },
+        {
+          "type": "list",
+          "items": [
+            "辨認速度入口、壓力出口與無滑移壁面。",
+            "理解平面平行板流和圓管流的差別。",
+            "知道殘差、守恆與物理量穩定要一起看。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept",
+      "title": "核心觀念：先決定空間與邊界",
+      "blocks": [
+        {
+          "type": "figure",
+          "src": "assets/diagrams/fluent-channel.svg",
+          "title": "這塊長方形，就是流體域",
+          "alt": "這塊長方形，就是流體域",
+          "caption": "示意為二維平面通道，垂直方向為間隙；繪圖縱橫比例有放大，不是實際細長比。"
+        },
+        {
+          "type": "compare",
+          "items": [
+            {
+              "title": "Velocity Inlet（速度入口）",
+              "text": "在左邊指定進入流體域的速度。"
+            },
+            {
+              "title": "Pressure Outlet（壓力出口）",
+              "text": "在右邊指定出口靜表壓；0 Pa 不是絕對真空。"
+            },
+            {
+              "title": "Wall（壁面）",
+              "text": "上下固定壁面採 No Slip（無滑移），壁面速度為零。"
+            }
+          ]
+        },
+        {
+          "type": "p",
+          "text": "Fluent 在網格上求解質量與動量等守恆方程。本文先用穩態、不可壓縮、牛頓流體與層流模型；不加入熱傳、多相或湍流來增加不必要的變因。"
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "title": "範例：看看充分發展的速度剖面",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "充分發展表示沿主流方向，剖面形狀不再改變，不是「流體不動」。這裡的解析模型是兩個很寬平行板之間的平面層流，中心速度為平均速度的 1.5 倍。"
+        },
+        {
+          "type": "lab",
+          "name": "channel"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/fluent-profile.svg",
+          "title": "壁面慢、中心快：拋物線剖面",
+          "alt": "壁面慢、中心快：拋物線剖面",
+          "caption": "解析剖面，非 Fluent 求解結果。圓管的 2 倍中心速度不適用於這個平行板模型。"
+        }
+      ]
+    },
+    {
+      "id": "inputs",
+      "title": "開始前的選擇",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "Planar（平面）與 Axisymmetric（軸對稱）不能混用；本例是 Planar。",
+            "入口均勻速度會形成發展段；要在下游檢查是否已充分發展。",
+            "Reynolds Number（雷諾數）必須寫清楚採用的特徵長度；本例用 Dh = 2H。",
+            "材料密度與黏度要對應指定條件，不能只接受預設 air（空氣）。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mistakes",
+      "title": "常見誤解",
+      "blocks": [
+        {
+          "type": "note",
+          "title": "穩態的彩色圖，不代表收斂已經過關",
+          "text": "需要同時看殘差、進出質量流率、壓差或速度等監測值，以及網格敏感度。單一殘差門檻並非所有問題的品質保證。"
+        },
+        {
+          "type": "checkpoint",
+          "title": "出口設定 0 Pa，通道裡的絕對壓力就是零嗎？",
+          "items": [
+            "不是。Pressure Outlet（壓力出口）這裡設定的是表壓；絕對壓力還要加上 Operating Pressure（操作壓力）。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "先辨認流體域與邊界，再選物理模型。",
+            "分清平面通道與圓管的解析參考。",
+            "解析式只適用於指定假設，不拿來套任何流場。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Fluent User’s Guide — Boundary Conditions",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_ug/flu_ug_bcs_sec_bound_cond.html",
+      "version": "2024 R2",
+      "support": "速度入口與壓力出口的物理意義及輸入項目。"
+    },
+    {
+      "title": "ANSYS Fluent in Workbench — Introduction",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_tg_workbench/flu_tg_elbow_workbench.html",
+      "version": "2024 R2",
+      "support": "Workbench–Fluent 工作流程、材料與邊界、求解及後處理；本文通道參數另訂。"
+    },
+    {
+      "title": "NPTEL — Viscous Incompressible Flow: Internal Flow",
+      "url": "https://archive.nptel.ac.in/content/storage2/courses/101103004/module5/lec2/5.html",
+      "version": "流體力學理論，非軟體版本限定",
+      "support": "平行板 Poiseuille 充分發展層流的拋物線剖面、壓降與 1.5 倍中心速度。"
+    }
+  ],
+  "related": [
+    "fluent-channel",
+    "fluent-convergence"
+  ]
+}

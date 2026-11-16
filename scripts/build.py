@@ -7,6 +7,8 @@ import shutil
 from visuals import render_visual, rich, modes, home_hero
 from make_diagrams import make as make_diagrams
 from datetime import date
+from labs import render_lab
+from make_multiphysics_diagrams import make as make_multiphysics
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'docs'
@@ -47,16 +49,22 @@ def load_content():
             assert src['url'].startswith('https://')
         for section in a['sections']:
             for block_item in section['blocks']:
+                if block_item['type']=='lab':
+                    assert block_item['name'] in ['electrostatic','impact','channel'], 'Invalid lab'
                 if block_item['type']=='figure':
                     assert all(block_item.get(k) for k in ['src','title','alt','caption'])
                     figure_path=(ROOT/block_item['src']).resolve()
                     assert figure_path.is_relative_to((ROOT/'assets').resolve()) and figure_path.is_file(), 'Missing figure'
-        assert any(b['type'] in ['figure','modes','beam'] for section in a['sections'] for b in section['blocks']), 'Every article needs a relevant visual'
+        assert any(b['type'] in ['figure','modes','beam','lab'] for section in a['sections'] for b in section['blocks']), 'Every article needs a relevant visual'
         articles.append(a)
     ids = {a['slug'] for a in articles}
+    for m in modules:
+        assert all(slug in ids for slug in m['route']), 'Invalid module route'
+        assert len(m['route']) == len(set(m['route'])), 'Duplicate module route'
+        assert all(next(a for a in articles if a['slug']==slug)['category']==m['id'] for slug in m['route']), 'Mismatched route category'
     for a in articles:
         assert all(r in ids and r != a['slug'] for r in a['related']), f'{a["slug"]}: broken related'
-    order = {'modal-basics':0,'modal-cantilever':1,'modal-zero-frequency':2,'modal-mesh-check':3}
+    order = {slug:i for i,slug in enumerate(slug for m in modules for slug in m['route'])}
     return modules, sorted(articles,key=lambda a: order.get(a['slug'],100))
 
 def txt(value):
@@ -67,20 +75,21 @@ def article_url(a):
 
 def card(a, prefix='', index=1):
     previews={'modal-basics':'bend-vs-twist','modal-cantilever':'fixed-face','modal-zero-frequency':'rigid-vs-elastic','modal-mesh-check':'mesh-study'}
-    preview=previews.get(a['slug'],'workflow')
-    return f'''<a class="article-card" href="{prefix}{article_url(a)}" data-kind="{a['kind']}" data-search="{txt(' '.join([a['title'],a['summary'],*a['tags']]))}">
+    preview=previews.get(a['slug'],next((Path(b['src']).stem for s in a['sections'] for b in s['blocks'] if b['type']=='figure'),'software-map'))
+    return f'''<a class="article-card" href="{prefix}{article_url(a)}" data-category="{a['category']}" data-kind="{a['kind']}" data-search="{txt(' '.join([a['category'],a['title'],a['summary'],*a['tags']]))}">
     <div class="card-top"><span class="badge {a['kind']}">{KINDS[a['kind']]}</span><span class="card-number">{index:02d}</span></div>
     <img class="card-illustration" loading="lazy" src="{prefix}assets/diagrams/{preview}.svg" alt="{txt(a['title'])}的教學圖解"><h3>{txt(a['title'])}</h3><p>{txt(a['summary'])}</p><div class="card-bottom"><span>{a['minutes']} 分鐘 · {txt(a['level'])}</span><span class="card-check" data-status="{a['slug']}">開始閱讀 ↗</span></div></a>'''
 
 def shell(title, body, modules, active='home', prefix='', toc='', page=''):
     links = ''.join(f'<a class="module-link {"selected" if active == m["id"] else ""}" href="{prefix}modules/{m["id"]}.html"><span class="module-icon">{i:02d}</span><span>{txt(m["name"])}<small>{txt(m["tool"])}</small></span>{"<span class=mini>規劃中</span>" if not m["ready"] else ""}</a>' for i,m in enumerate(modules,1))
-    return f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="實驗室 ANSYS 學習與問題整理站。Workbench 2024 R2，英文介面搭配繁體中文說明。"><title>{txt(title)} | ANSYS Lab Notes</title><link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="{prefix}assets/style.css"><link rel="stylesheet" href="{prefix}assets/playful.css"><script defer src="{prefix}assets/modal-math.js"></script><script defer src="{prefix}assets/modes.js"></script><script defer src="{prefix}assets/app.js"></script></head>
+    return f'''<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="實驗室 ANSYS 學習與問題整理站。ANSYS 2024 R2，英文介面搭配繁體中文說明。"><title>{txt(title)} | ANSYS Lab Notes</title><link rel="icon" href="{prefix}assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="{prefix}assets/style.css"><link rel="stylesheet" href="{prefix}assets/playful.css"><script defer src="{prefix}assets/modal-math.js"></script><script defer src="{prefix}assets/modes.js"></script><script defer src="{prefix}assets/lab-math.js"></script><script defer src="{prefix}assets/labs.js"></script><script defer src="{prefix}assets/app.js"></script></head>
     <body data-page="{txt(page)}"><a class="skip" href="#main">跳到主要內容</a><div class="shade" data-close-menu></div>
-    <aside class="sidebar" id="navigation" aria-label="主要導覽"><a class="brand" href="{prefix}index.html"><span class="brand-mark">∿</span><span>ANSYS<small>LAB NOTES / 實驗室筆記</small></span></a><p class="sidebar-intro">從「看懂怎麼動」，<br>到「自己做得出來」。</p><a class="home-link {"selected" if active == "home" else ""}" href="{prefix}index.html">⌂　學習總覽</a><div class="nav-label">模擬主題</div>{links}<div class="nav-label">一起留下筆記</div><a class="contribute-link {"selected" if active == "contribute" else ""}" href="{prefix}contribute.html">＋　新增與維護內容</a><a class="contribute-link" href="{prefix}AGENTS.md">↗　閱讀 AGENTS.md</a><div class="side-footer"><span class="dot"></span> 2024 R2 · EN / 繁中說明<br><small>學習紀錄，持續累積。</small></div></aside>
-    <div class="workspace"><header class="topbar"><div><button class="menu-button" aria-label="開啟導覽" aria-expanded="false" aria-controls="navigation">☰</button><a href="{prefix}index.html">實驗室學習站</a><span class="slash">/</span><span>{txt(title)}</span></div><span class="version-pill">WORKBENCH 2024 R2</span></header><main id="main" tabindex="-1">{body}</main><footer class="footer"><span>ANSYS LAB NOTES · 從理解到重現</span><span>獨立學習整理 · 非 ANSYS 官方教材</span></footer></div>{toc}</body></html>'''
+    <aside class="sidebar" id="navigation" aria-label="主要導覽"><a class="brand" href="{prefix}index.html"><span class="brand-mark">∿</span><span>ANSYS<small>LAB NOTES / 實驗室筆記</small></span></a><p class="sidebar-intro">從「看懂物理」，<br>到「自己做得出來」。</p><a class="home-link {"selected" if active == "home" else ""}" href="{prefix}index.html">⌂　學習總覽</a><div class="nav-label">模擬主題</div>{links}<div class="nav-label">一起留下筆記</div><a class="contribute-link {"selected" if active == "contribute" else ""}" href="{prefix}contribute.html">＋　新增與維護內容</a><a class="contribute-link" href="{prefix}AGENTS.md">↗　閱讀 AGENTS.md</a><div class="side-footer"><span class="dot"></span> 2024 R2 · EN / 繁中說明<br><small>學習紀錄，持續累積。</small></div></aside>
+    <div class="workspace"><header class="topbar"><div><button class="menu-button" aria-label="開啟導覽" aria-expanded="false" aria-controls="navigation">☰</button><a href="{prefix}index.html">實驗室學習站</a><span class="slash">/</span><span>{txt(title)}</span></div><span class="version-pill">ANSYS 2024 R2</span></header><main id="main" tabindex="-1">{body}</main><footer class="footer"><span>ANSYS LAB NOTES · 從理解到重現</span><span>獨立學習整理 · 非 ANSYS 官方教材</span></footer></div>{toc}</body></html>'''
 
 def block(b,prefix):
     t = b['type']
+    if t == 'lab': return render_lab(b['name'],prefix)
     visual = render_visual(b,prefix)
     if visual is not None: return visual
     if t == 'p': return '<p>' + rich(b['text']) + '</p>'
@@ -101,6 +110,7 @@ def write(path,html):
 
 def build():
     make_diagrams()
+    make_multiphysics()
     modules,articles=load_content()
     OUT.mkdir(exist_ok=True)
     shutil.copytree(ROOT/'assets',OUT/'assets',dirs_exist_ok=True)
@@ -116,23 +126,33 @@ def build():
     ready_count=sum(bool(m['ready']) for m in modules)
     cards=''.join(card(a,index=i) for i,a in enumerate(articles,1))
     module_tiles=''.join(f'<a class="module-tile" href="modules/{m["id"]}.html"><span>{txt(m["tool"])}</span><h3>{txt(m["name"])}</h3><p>{"已收錄 "+str(sum(a["category"]==m["id"] for a in articles))+" 篇" if m["ready"] else "規劃中 · 查看學習方向"}</p><b>↗</b></a>' for m in modules)
+    category_options=''.join('<option value="'+m['id']+'">'+txt(m['name'])+' / '+txt(m['tool'])+'</option>' for m in modules)
     home=f'''<section class="hero"><div class="hero-copy"><span class="eyebrow">THE LAB NOTEBOOK / VOL. 01</span><h1>模擬的每一步，<br>都有跡可循<span>。</span></h1><p>從第一個固有頻率，到可以交接的分析流程。<br>把觀念、操作與排錯，整理成下一個人也能接續的筆記。</p><a class="primary-button" href="articles/modal-basics.html">從模態分析開始 <span>↗</span></a><div class="hero-meta">ENGLISH INTERFACE <span>＋</span> 繁體中文說明</div></div><div class="hero-visual"><div class="visual-label"><span>CASE 001 / CANTILEVER</span><span>GEOMETRY STUDY</span></div><img src="assets/beam.svg" alt="懸臂樑幾何示意，一端固定；非模擬結果。"><div class="visual-caption"><span>單一實體 → 固定端 → 前六階振型</span><span>示意圖</span></div></div></section>
     <div class="stats-strip"><div><b>{ready_count:02d}</b><span>目前開放主題</span></div><div><b>{n:02d}</b><span>入門學習筆記</span></div><div><b>2024 R2</b><span>教學基準版本</span></div><div class="progress-stat"><b id="reading-count">0 / {n}</b><span>本機已讀進度</span></div></div>
-    <section class="content-section"><div class="section-heading"><div><span class="eyebrow">YOUR LEARNING PATH</span><h2>從這裡，開始第一個分析</h2></div><a class="text-link" href="modules/modal.html">模態分析專區 ↗</a></div><div class="learning-path"><a href="articles/modal-basics.html"><span>01 / 理解</span><strong>先掌握基本觀念</strong><small>頻率、振型與分析假設</small></a><a href="articles/modal-cantilever.html"><span>02 / 實作</span><strong>跟著完成懸臂樑</strong><small>材料、網格、拘束與求解</small></a><a href="articles/modal-zero-frequency.html"><span>03 / 檢查</span><strong>學會判讀與排錯</strong><small>近零頻率與連通性檢查</small></a></div></section>
-    <section class="content-section" id="library"><div class="section-heading"><div><span class="eyebrow">KNOWLEDGE LIBRARY</span><h2>每一篇，都讓下一步更清楚</h2></div></div><div class="library-tools"><div class="filter-group" role="group" aria-label="文章類型篩選"><button class="filter active" data-filter="all" aria-pressed="true">全部筆記</button><button class="filter" data-filter="concept" aria-pressed="false">觀念筆記</button><button class="filter" data-filter="tutorial" aria-pressed="false">操作教學</button><button class="filter" data-filter="troubleshooting" aria-pressed="false">問題紀錄</button></div><label class="search-box"><span aria-hidden="true">⌕</span><input id="article-search" type="search" placeholder="搜尋頻率、固定支撐…" aria-label="搜尋文章標題、摘要與標籤"></label></div><p class="search-status" aria-live="polite" id="search-status">共 {n} 篇筆記</p><div class="article-grid">{cards}</div><p class="empty-state" hidden>找不到符合的筆記，試試其他關鍵詞或類型。</p></section>
-    <section class="content-section"><div class="section-heading"><div><span class="eyebrow">GROW WITH THE LAB</span><h2>一套方法，接續不同模擬</h2></div></div><div class="module-grid">{module_tiles}</div></section><section class="contribute-banner"><div><span class="eyebrow">WRITE IT ONCE. PASS IT ON.</span><h2>讓下一位學弟妹，少繞一點路。</h2><p>文章格式、查證方式與開發流程，都寫進 AGENTS.md。</p></div><a class="light-button" href="contribute.html">了解如何新增內容 ↗</a></section>'''
+    <section class="content-section"><div class="section-heading"><div><span class="eyebrow">YOUR LEARNING PATH</span><h2>從這裡，開始第一個分析</h2></div><a class="text-link" href="#modules">四個主題，各有學習路線 ↗</a></div><div class="learning-path"><a href="articles/modal-basics.html"><span>01 / 理解</span><strong>先掌握基本觀念</strong><small>搞懂物理與分析假設</small></a><a href="articles/modal-cantilever.html"><span>02 / 實作</span><strong>跟著完成入門案例</strong><small>電場、碰撞、流動與振動</small></a><a href="articles/modal-zero-frequency.html"><span>03 / 檢查</span><strong>學會判讀與排錯</strong><small>能量、守恆、邊界與網格</small></a></div></section>
+    <section class="content-section" id="library"><div class="section-heading"><div><span class="eyebrow">KNOWLEDGE LIBRARY</span><h2>每一篇，都讓下一步更清楚</h2></div></div><label class="module-selector">主題 <select id="category-filter"><option value="all">全部主題</option>{category_options}</select></label><div class="library-tools"><div class="filter-group" role="group" aria-label="文章類型篩選"><button class="filter active" data-filter="all" aria-pressed="true">全部筆記</button><button class="filter" data-filter="concept" aria-pressed="false">觀念筆記</button><button class="filter" data-filter="tutorial" aria-pressed="false">操作教學</button><button class="filter" data-filter="troubleshooting" aria-pressed="false">問題紀錄</button></div><label class="search-box"><span aria-hidden="true">⌕</span><input id="article-search" type="search" placeholder="搜尋電場、接觸、入口…" aria-label="搜尋文章標題、摘要與標籤"></label></div><p class="search-status" aria-live="polite" id="search-status">共 {n} 篇筆記</p><div class="article-grid">{cards}</div><p class="empty-state" hidden>找不到符合的筆記，試試其他關鍵詞或類型。</p></section>
+    <section class="content-section" id="modules"><div class="section-heading"><div><span class="eyebrow">GROW WITH THE LAB</span><h2>一套方法，接續不同模擬</h2></div></div><div class="module-grid">{module_tiles}</div></section><section class="contribute-banner"><div><span class="eyebrow">WRITE IT ONCE. PASS IT ON.</span><h2>讓下一位學弟妹，少繞一點路。</h2><p>文章格式、查證方式與開發流程，都寫進 AGENTS.md。</p></div><a class="light-button" href="contribute.html">了解如何新增內容 ↗</a></section>'''
     hero_end=home.index('</section>')+len('</section>')
-    home=home_hero()+home[hero_end:]
+    home="<section class=\"hero\"><div class=\"hero-copy\"><span class=\"eyebrow\">THE LAB NOTEBOOK / VOL. 03</span><h1>振動到流動，<br>用圖解看懂模擬<span>。</span></h1><p>先玩懂物理，再跟著做一次。<br>把操作、圖解與排錯，留給未來的自己與學弟妹。</p><a class=\"primary-button\" href=\"#modules\">挑一個主題，開始探索 ↗</a><div class=\"hero-meta\">2024 R2 · 英文介面 ＋ 繁體中文說明</div></div><div class=\"hero-visual\"><img src=\"assets/diagrams/software-map.svg\" alt=\"四種模擬與對應的操作環境：模態、Maxwell、LS-DYNA 與 Fluent。\"><div class=\"visual-caption\">四種物理，一套可以傳承的學習筆記。</div></div></section>"+home[hero_end:]
     marker='<section class="content-section"><div class="section-heading"><div><span class="eyebrow">YOUR LEARNING PATH'
     pos=home.index(marker)
     try_section='<section class="content-section try-section" id="try-it"><div class="section-heading"><div><span class="eyebrow">先玩再懂 / VIBRATION PLAYGROUND</span><h2>點一下，認識它的不同振動姿勢</h2></div></div>'+modes()+'</section>'
     home=home[:pos]+try_section+home[pos:]
+    tile_start=home.index('<section class="content-section" id="modules">')
+    tile_end=home.index('</section>',tile_start)+len('</section>')
+    module_section=home[tile_start:tile_end]
+    home=home[:tile_start]+home[tile_end:]
+    before_try=home.index('<section class="content-section try-section"')
+    home=home[:before_try]+module_section+home[before_try:]
+    home=home.replace('href="articles/modal-basics.html"><span>01 / 理解','href="#modules"><span>01 / 理解').replace('href="articles/modal-cantilever.html"><span>02 / 實作','href="#modules"><span>02 / 實作').replace('href="articles/modal-zero-frequency.html"><span>03 / 檢查','href="#modules"><span>03 / 檢查')
     write(Path('index.html'),shell('學習總覽',home,modules))
     for m in modules:
         collection=[a for a in articles if a['category']==m['id']]
         content=f'<section class="page-heading"><span class="eyebrow">SIMULATION MODULE / {txt(m["tool"].upper())}</span><h1>{txt(m["name"])}</h1><p>{txt(m["desc"])}</p><div class="tag-row"><span class="badge">2024 R2</span><span class="badge">{len(collection)} 篇筆記</span></div></section>'
         if collection:
-            content+='<div class="note"><strong>建議閱讀順序</strong><p>先讀基本觀念，再完成懸臂樑操作，接著練習近零頻率排查與網格檢查。操作文章目前為文件查證，等待實機驗證。你也可以先在首頁試玩不同振型示意。</p></div><div class="article-grid">'+''.join(card(a,'../',i) for i,a in enumerate(collection,1))+'</div>'
+            content+='<div class="note"><strong>操作環境：'+txt(m['environment'])+'</strong><p>先理解觀念 → 跟做案例 → 檢查與排錯。操作內容為文件查證，尚待實機驗證；圖解與互動為解析或概念示意。</p></div>'
+            content+='<section id="playground">'+(modes('../') if m['lab']=='modes' else render_lab(m['lab'],'../'))+'</section>'
+            content+='<section class="content-section"><div class="section-heading"><h2>照著讀，從理解到實作</h2></div><div class="article-grid">'+''.join(card(a,'../',i) for i,a in enumerate(collection,1))+'</div></section>'
         else:
             content+='<div class="planning"><span class="eyebrow">COMING NEXT</span><h2>這個專區，留給下一次學習。</h2><p>尚未收錄操作教學。未來將沿用相同文章模板、英文選項搭配中文說明，以及來源與驗證紀錄。</p><a class="primary-button" href="../contribute.html">查看新增內容方式 ↗</a></div>'
         write(Path('modules')/(m['id']+'.html'),shell(m['name'],content,modules,m['id'],'../'))

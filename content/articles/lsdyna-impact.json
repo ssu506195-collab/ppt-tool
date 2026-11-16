@@ -1,0 +1,236 @@
+{
+  "slug": "lsdyna-impact",
+  "category": "ls-dyna",
+  "kind": "tutorial",
+  "title": "第一個 LS-DYNA：彈性方塊撞固定擋塊",
+  "summary": "用兩個簡單實體練習初始速度、無摩擦接觸、時間控制與能量輸出。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 20,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "可使用 Workbench 2024 R2 的 LS-DYNA 系統與授權",
+    "已讀碰撞與時間步觀念"
+  ],
+  "tags": [
+    "碰撞案例",
+    "初始速度",
+    "Frictionless",
+    "GLSTAT"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "先做==無塑性、無破壞==的簡單碰撞，觀察接觸發生的時間與能量去向。"
+        },
+        {
+          "type": "list",
+          "items": [
+            "兩個實體分開建模與網格化。",
+            "只對運動方塊施加初始速度。",
+            "記錄變形、速度及全域能量，而不是只存一張圖。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "before",
+      "title": "前置條件與假設",
+      "blocks": [
+        {
+          "type": "note",
+          "title": "自訂教學案例／待實機驗證",
+          "text": "尚未取得此模型的求解結果。兩個物件都採可變形線彈性材料；固定的是擋塊背面，不把整個擋塊假裝成剛體。不考慮塑性、破壞、摩擦與重力。"
+        }
+      ]
+    },
+    {
+      "id": "parameters",
+      "title": "案例參數",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": [
+            "項目",
+            "設定"
+          ],
+          "rows": [
+            [
+              "擋塊",
+              "x = −5～0 mm，y、z = −10～10 mm；固定 x = −5 mm 背面。"
+            ],
+            [
+              "運動方塊",
+              "x = 1～51 mm，y、z = −5～5 mm；起始間隙 1 mm。"
+            ],
+            [
+              "材料（兩者）",
+              "E = 200 GPa、ν = 0.30、ρ = 7850 kg/m³，僅等向性線彈性。"
+            ],
+            [
+              "初始速度",
+              "只給運動方塊：VX = −1 m/s，VY = VZ = 0。"
+            ],
+            [
+              "接觸",
+              "Frictionless（無摩擦）；不使用 Bonded（黏結）。"
+            ],
+            [
+              "網格與時間",
+              "初始尺寸 1 mm；End Time（結束時間）= 0.002 s。"
+            ],
+            [
+              "預先估算",
+              "接觸前若無其他力，1 mm / 1 m/s ≈ 1 ms 才首次碰到；這是運動學預估。"
+            ]
+          ]
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/impact-setup.svg",
+          "title": "把座標、間隙和速度方向畫清楚",
+          "alt": "把座標、間隙和速度方向畫清楚",
+          "caption": "示意圖不是按比例繪製；幾何尺寸以表格為準。"
+        }
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "操作步驟：幾何、材料與接觸",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "選對分析系統",
+              "text": "在 Workbench（分析流程平台）拖入 LS-DYNA。若工具箱沒有該系統，先確認安裝與授權；不以 Explicit Dynamics（顯式動力學）代替再照抄所有欄位。"
+            },
+            {
+              "title": "建立兩個獨立實體",
+              "text": "用 DesignModeler（幾何建模器）或匯入 CAD，依座標表建立兩個方塊。可用 Create（建立）→ Primitives（基本幾何）→ Box（方塊），以 Add Frozen（新增凍結實體）保持分開；確認 1 mm 間隙，且未做共享節點或黏成同一個連續實體。 在 Mechanical 樹狀結構確認分屬兩個獨立 part，避免初始速度套用到擋塊。"
+            },
+            {
+              "title": "建立與指派材料",
+              "text": "在 Engineering Data（工程材料資料）建立 LS Elastic Demo（彈性示例），加入 Density（密度）與 Isotropic Elasticity（等向性彈性）。進入 Mechanical（分析環境）後對兩個實體各自指派，確認沒有額外塑性或失效材料模型。"
+            },
+            {
+              "title": "固定擋塊背面",
+              "text": "右鍵 LS-DYNA 分析項目 → Insert（插入）→ Fixed Support（固定支撐），選擋塊 x = −5 mm 的完整背面並 Apply（套用）；不要固定運動方塊。"
+            },
+            {
+              "title": "建立有效接觸",
+              "text": "在 Connections（連接）建立或檢查 Body Interaction（物體交互作用），範圍只含這兩個實體，Type（類型）設 Frictionless（無摩擦）。檢查是否還有重複或自動產生的 Bonded（黏結）接觸；不可讓它提前把兩物件綁住。"
+            },
+            {
+              "title": "產生初始網格",
+              "text": "在 Mesh（網格）設定 Element Size（元素尺寸）= 1 mm；對可掃掠方塊可插入 Method（方法）→ Sweep（掃掠）。生成後檢查元素形狀、厚度方向分割與統計。記錄實際元素公式，後續做網格敏感度比較。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "title": "操作步驟：速度、時間與輸出",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "加入初始速度",
+              "text": "在 Initial Conditions（初始條件）下插入 Velocity（速度），作用範圍選**整個運動方塊所屬 part**；以 Components（分量）輸入 VX = −1 m/s、VY = VZ = 0。確認不是另一個持續施加的速度邊界，也沒有把擋塊納入相同 part。"
+            },
+            {
+              "title": "設定結束時間",
+              "text": "選 Analysis Settings（分析設定），設定 End Time（結束時間）= 0.002 s。保留程式管理的求解時間步，先記錄預設求解器控制；此案例不刻意啟用質量縮放。"
+            },
+            {
+              "title": "準備足夠的時間歷程",
+              "text": "在 Output Controls（輸出控制）中將結果儲存設為 Equally Spaced Points（等間隔點），初始嘗試 500 點；欄位是否以點數或間隔輸入，以該面板實際顯示單位為準。這控制存檔，不直接設定顯式時間步。"
+            },
+            {
+              "title": "啟用全域與零件能量",
+              "text": "在 LS-DYNA 的時間歷程輸出啟用 GLSTAT（全域資料）與 MATSUM（零件資料），依需要加入接觸力輸出。這些輸出必須在求解前準備，不能假設求解後所有資料都有。"
+            },
+            {
+              "title": "求解並檢視",
+              "text": "執行 Solve（求解），先看 Solution Information（求解資訊）與警告。於 Solution（求解與結果）加入 Total Deformation（總變形）與 Directional Velocity（方向速度），選運動方塊、X 方向，逐時檢查接觸前後。全域能量可從相應 ASCII 結果或 LS-PrePost 檢視。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "title": "結果檢查",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "首次接觸應與約 1 ms 的運動學預估相容；接觸前不應已產生持續的接觸力。",
+            "檢查有沒有嚴重穿透、異常網格變形或一開始就被黏住。",
+            "比較動能、內能、外力作功與非物理能量項；實際數值容許差需另訂，不能把單一百分比當成所有碰撞的保證。",
+            "改網格與輸出密度後，比較接觸歷程與能量，才能評估結果敏感度。"
+          ]
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/impact-energy.svg",
+          "title": "把動畫和能量放在一起看",
+          "alt": "把動畫和能量放在一起看",
+          "caption": "這張曲線只來自簡化彈簧模型，不能當作本三維案例的預期完整能量曲線。"
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "先把方向、間隙、初始條件與接觸設定對上。",
+            "存好模型、求解設定、輸出項目與實際結果。",
+            "後續再逐項加入塑性、摩擦與更真實的材料。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS LS-DYNA — Setting up a Project",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/exd_ag_lsdyna_setting_up.html",
+      "version": "2024 R2",
+      "support": "Workbench LS-DYNA 的材料、連接、網格與分析設定。"
+    },
+    {
+      "title": "ANSYS LS-DYNA — Initial Conditions",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/lsdyna_ug_initial_conditions.html",
+      "version": "2024 R2",
+      "support": "初始平移速度、整個 part 的作用範圍與關鍵字。"
+    },
+    {
+      "title": "ANSYS LS-DYNA — Contacts and Body Interactions",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/exd_ag_lsdyna_contact_body_inter.html",
+      "version": "2024 R2",
+      "support": "摩擦／無摩擦接觸與 Body Interaction 的 LS-DYNA 轉換。"
+    },
+    {
+      "title": "ANSYS LS-DYNA — Accessing Results",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/exd_ag_lsdyna_results.html",
+      "version": "2024 R2",
+      "support": "全域能量、接觸力、反力與時間歷程輸出。"
+    }
+  ],
+  "related": [
+    "lsdyna-basics",
+    "lsdyna-stability"
+  ]
+}

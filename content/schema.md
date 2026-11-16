@@ -26,3 +26,8 @@ blocks 支援：
 - compare：{type,items:[{title,text}]}，二至三個並排概念或比較。
 - details / checkpoint：{type,title,items:["段落"]}，以可展開說明補充觀念或思考提示。
 圖解資料依據 scripts/make_diagrams.py 與 assets/modal-math.js，彎曲振型以解析式繪製。數學測試位於 scripts/test_modes.cjs。
+
+## V3 多物理互動與分類
+- lab：{"type":"lab","name":"electrostatic"}；name 僅可為 electrostatic、impact、channel。使用共用解析模型與明確單位，不新增虛構求解結果。
+- modules.json 每分類包含 id、name、tool、desc、ready、route（文章 slug 陣列）、lab、cover、environment。新增文章請在 route 加入閱讀順序；首頁分類與入口由此產生。
+- 新圖解集中 scripts/make_multiphysics_diagrams.py；新互動共用 scripts/labs.py、assets/labs.js、assets/lab-math.js。修改公式後執行 node scripts/test_labs.cjs。

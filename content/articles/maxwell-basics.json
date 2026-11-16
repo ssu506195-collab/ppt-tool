@@ -1,0 +1,168 @@
+{
+  "slug": "maxwell-basics",
+  "category": "maxwell",
+  "kind": "concept",
+  "title": "電位高，不一定電場就大？",
+  "summary": "把電位想成高度，再用間距理解電場。先動手調電壓與間隙，看懂靜電場的基本關係。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 9,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "知道電壓的基本單位 V"
+  ],
+  "tags": [
+    "電位",
+    "電場",
+    "靜電",
+    "Maxwell"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "電位描述「在哪個高度」，電場描述==電位變化有多快==；它們是不同的量。"
+        },
+        {
+          "type": "list",
+          "items": [
+            "分清楚 V、V/m 與激勵參考值。",
+            "知道 Maxwell 與 Mechanical 使用不同操作環境。",
+            "理解理想平行板近似的適用條件。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept",
+      "title": "核心觀念：電位像地形，電場看坡度",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "在靜電問題，電場 E = −∇V，方向指向電位降低的方向。兩個位置電壓差相同，若間距更小，理想均勻間隙內的場會更強。這不是用單一電壓值就能判斷的事情。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/maxwell-potential.svg",
+          "title": "電位與電場，分開看才清楚",
+          "alt": "電位與電場，分開看才清楚",
+          "caption": "理想平行板解析示意；箭頭是電場方向，色帶是電位，不是求解雲圖。"
+        },
+        {
+          "type": "compare",
+          "items": [
+            {
+              "title": "Electric Potential（電位）",
+              "text": "單位 V，需要相對參考；本例以下板 0 V 為參考。"
+            },
+            {
+              "title": "Electric Field（電場）",
+              "text": "單位 V/m，由電位的空間變化決定；不是電壓本身。"
+            },
+            {
+              "title": "解什麼物理？",
+              "text": "Electrostatic（靜電場）不等於 Magnetostatic（靜磁場），也不等於馬達暫態。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "title": "範例：調一調，觀察均勻間隙",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "這個小工具只用理想平行板公式。改電壓或間距，觀察平均場強與電位色帶；箭頭密度固定，顏色表示電位，不能當成真實幾何的邊緣場。"
+        },
+        {
+          "type": "lab",
+          "name": "electrostatic"
+        },
+        {
+          "type": "formula",
+          "text": "|E| = |ΔV| / d；例：1000 V / 0.010 m = 100000 V/m"
+        }
+      ]
+    },
+    {
+      "id": "environment",
+      "title": "實際軟體在哪裡？",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "Maxwell 的主要環境是 Electronics Desktop（電子設計平台）。本網站採 Maxwell 2D（二維電磁場）入門。Workbench（分析流程平台）可以參與連結工作，但這篇的激勵與邊界不在 Mechanical（結構分析環境）內設定。"
+        },
+        {
+          "type": "list",
+          "items": [
+            "均勻截面可考慮 XY 平面模型；完整旋轉對稱才考慮 RZ 軸對稱。",
+            "三維端部或邊緣效應顯著時，要重新評估二維近似。",
+            "理想均勻間隙練熟後，再進入銅棒絕緣、磁場或馬達案例。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mistakes",
+      "title": "常見誤解",
+      "blocks": [
+        {
+          "type": "note",
+          "title": "參考電位與邊界，不要混成同一件事",
+          "text": "0 V 是電位參考或指定導體電位；預設外邊界不代表全部接地。改變外邊界，可能改變電場路徑。"
+        },
+        {
+          "type": "checkpoint",
+          "title": "間距變成一半，場強會怎樣？",
+          "items": [
+            "在相同 ΔV、理想均勻介質與平行板假設下，E 會變成兩倍。有限電極、尖角或多層介質不能直接逐點套這個結論。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "先選對分析類型與幾何近似。",
+            "把電位、電場、介質與邊界分開記錄。",
+            "解析式是入門檢查工具，不取代複雜模型的求解。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Maxwell 2D Technical Notes",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/Maxwell2DTechnicalNotes.htm",
+      "version": "2024 R2",
+      "support": "Maxwell 2D 的平面／軸對稱假設與可用分析類型。"
+    },
+    {
+      "title": "ANSYS Maxwell — 2D Electrostatic Voltage Excitation",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/AssigningaVoltageExcitationfora2DElectrostaticSolver.htm",
+      "version": "2024 R2",
+      "support": "電壓激勵的選取、選單路徑及數值／單位。"
+    },
+    {
+      "title": "ANSYS Maxwell — 2D Electrostatic Boundaries",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/2DElectrostaticBoundaries.htm",
+      "version": "2024 R2",
+      "support": "預設外邊界為 Neumann，與接地不同；自然介面與對稱邊界。"
+    }
+  ],
+  "related": [
+    "maxwell-capacitor",
+    "maxwell-field-check"
+  ]
+}

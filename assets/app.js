@@ -26,19 +26,21 @@
   document.querySelectorAll('.sidebar a').forEach(el => el.addEventListener('click', closeMenu));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeMenu(); menu?.focus(); } });
   let filter = 'all';
+  const category = document.querySelector('#category-filter');
   const input = document.querySelector('#article-search');
   const filters = document.querySelectorAll('[data-filter]');
   const cards = [...document.querySelectorAll('[data-search]')];
   function search() {
     const words = (input?.value || '').trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     let n = 0;
-    cards.forEach(card => { const show = (filter === 'all' || card.dataset.kind === filter) && words.every(word => card.dataset.search.toLocaleLowerCase().includes(word)); card.hidden = !show; if (show) n++; });
+    cards.forEach(card => { const show = (!category || category.value === 'all' || card.dataset.category === category.value) && (filter === 'all' || card.dataset.kind === filter) && words.every(word => card.dataset.search.toLocaleLowerCase().includes(word)); card.hidden = !show; if (show) n++; });
     const status = document.querySelector('#search-status');
     if (status) status.textContent = `顯示 ${n} / ${cards.length} 篇筆記`;
     const empty = document.querySelector('.empty-state'); if (empty) empty.hidden = n !== 0;
   }
   filters.forEach(el => el.addEventListener('click', () => { filter = el.dataset.filter; filters.forEach(x => { const active = x === el; x.classList.toggle('active', active); x.setAttribute('aria-pressed', String(active)); }); search(); }));
   input?.addEventListener('input', search);
+  category?.addEventListener('change', search);
 })();
 
 /* SVG figures remain links without JavaScript; with JS they open a zoomable dialog. */

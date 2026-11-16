@@ -1,0 +1,176 @@
+{
+  "slug": "fluent-convergence",
+  "category": "fluent",
+  "kind": "troubleshooting",
+  "title": "殘差降了，為什麼結果還不能直接用？",
+  "summary": "用殘差、質量守恆與關注物理量三個角度，一起檢查 Fluent 解。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 8,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "能查看 Fluent 殘差與質量通量報表"
+  ],
+  "tags": [
+    "收斂",
+    "殘差",
+    "質量平衡",
+    "回流",
+    "網格"
+  ],
+  "sections": [
+    {
+      "id": "symptom",
+      "title": "問題現象",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "收斂要同時看==方程解得如何==、==有沒有守恆==、==關注量是否穩定==。"
+        },
+        {
+          "type": "p",
+          "text": "可能是殘差很低但流量對不上、壓降持續變，或出口出現回流。不要先把殘差門檻放寬，讓畫面顯示完成就交付。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/fluent-convergence.svg",
+          "title": "三種檢查，各自回答不同問題",
+          "alt": "三種檢查，各自回答不同問題",
+          "caption": "三個檢查面向的概念圖；沒有虛構的收斂歷程或已通過標記。"
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "title": "適用情境",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "以本網站的穩態不可壓縮通道為主。真正非穩態問題可能不會得到平坦的穩態監測；若物理本來具有周期變化，應檢討分析型態，不能只持續迭代。"
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "title": "檢查順序",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "確認設定沒走偏",
+              "text": "核對 Planar（平面）／Axisymmetric（軸對稱）、材料、單位、流體區指派與上下無滑移壁面。"
+            },
+            {
+              "title": "看殘差趨勢",
+              "text": "觀察是否持續下降、停在平台或振盪。門檻與縮放方式要一起記，不以一條曲線跨線當成全部通過。"
+            },
+            {
+              "title": "算質量不平衡",
+              "text": "在 Fluxes（通量）查看所有入口與出口的 Mass Flow Rate（質量流率），注意入口出口符號可能相反。以 |總淨流量| / 總流入量作百分比，不把帶符號相加和絕對值相加混用。"
+            },
+            {
+              "title": "觀察物理監測",
+              "text": "持續看兩個下游截面的平均靜壓、中心線速度與剖面，確認它們隨迭代已穩定，並對照解析假設。"
+            },
+            {
+              "title": "最後做網格比較",
+              "text": "保持物性與邊界一致，細化網格再比較壓降與剖面。若出口回流明顯，先檢視域長、邊界位置與流向；不能為了消除訊息任意改成壁面。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fix",
+      "title": "處理方式",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": [
+            "觀察",
+            "合理的下一步"
+          ],
+          "rows": [
+            [
+              "殘差低，質量仍不平衡",
+              "核對通量範圍、符號與漏算邊界，再繼續求解或收緊目標。"
+            ],
+            [
+              "剖面尚未充分發展",
+              "比較更下游位置、加長入口發展區或重訂比較位置。"
+            ],
+            [
+              "壓降接近，但網格一改就跳",
+              "檢查壁面與間隙方向網格品質，再做系統性比較。"
+            ],
+            [
+              "求解穩定但與理論不同",
+              "先確認幾何與理論同為平行板、物性相同且在充分發展段。"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "title": "完成條件",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "殘差與所有重要監測都有完整趨勢紀錄。",
+            "本例可先以質量不平衡小於 0.1% 作練習目標，但不是通用合格規範。",
+            "關注量在迭代與網格細化後穩定，且與本例物理條件相容。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "checkpoint",
+          "title": "流量守恆，但速度剖面錯了，能算驗證成功嗎？",
+          "items": [
+            "不能。守恆是必要檢查之一，錯誤的壁面、物性或模型也可能得到守恆的解。"
+          ]
+        },
+        {
+          "type": "list",
+          "items": [
+            "數值收斂與模型正確性是不同層次。",
+            "保留你實際採用的門檻、範圍與圖表。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Fluent Tutorial — Mass Conservation Check",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_tg/flu_tg_edm_flamelet_wtm.html",
+      "version": "2024 R2",
+      "support": "殘差或監測值穩定後，仍須檢查淨質量通量；本文不採用該燃燒模型。"
+    },
+    {
+      "title": "ANSYS Fluent User’s Guide — Boundary Conditions",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/flu_ug/flu_ug_bcs_sec_bound_cond.html",
+      "version": "2024 R2",
+      "support": "速度入口與壓力出口的物理意義及輸入項目。"
+    },
+    {
+      "title": "NPTEL — Viscous Incompressible Flow: Internal Flow",
+      "url": "https://archive.nptel.ac.in/content/storage2/courses/101103004/module5/lec2/5.html",
+      "version": "流體力學理論，非軟體版本限定",
+      "support": "平行板 Poiseuille 充分發展層流的拋物線剖面、壓降與 1.5 倍中心速度。"
+    }
+  ],
+  "related": [
+    "fluent-channel",
+    "fluent-basics"
+  ]
+}

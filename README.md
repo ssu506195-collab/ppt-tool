@@ -1,12 +1,24 @@
 # ANSYS Lab Notes｜實驗室 ANSYS 學習與問題整理站
 
-提供初學者可以接續使用的模擬筆記。第一版主題是 ANSYS Workbench 2024 R2 / Mechanical 模態分析；使用英文介面名稱搭配繁體中文說明。教學目前為文件查證，尚待 ANSYS 實機驗證。
+提供初學者可以接續使用的模擬筆記。包含 ANSYS 2024 R2 的 Mechanical 模態分析、Maxwell 靜電場、LS-DYNA 顯式碰撞與 Fluent 通道層流；使用英文介面名稱搭配繁體中文說明。教學目前為文件查證，尚待 ANSYS 實機驗證。
 
 ## 快速瀏覽
-開啟 docs/index.html 即可離線瀏覽。搜尋、文章類型篩選、已讀進度、手機導覽、振型播放與圖解放大都不需要 API。
+開啟 docs/index.html 即可離線瀏覽。搜尋、主題與文章類型組合篩選、已讀進度、手機導覽、四類物理互動與圖解放大都不需要 API。
 若瀏覽器限制本機儲存，已讀進度只在目前頁面暫存；網站內容仍可閱讀。
 
-## V2 圖解版新增內容
+## V3 四專區更新
+保留 V2 手帳、重點標記、概念卡與圖解放大的風格，現共 13 篇文章、23 張原創 SVG。
+
+| 專區 | 觀念與操作案例 | 問題排查與互動 |
+|---|---|---|
+| Mechanical（4 篇） | 固有頻率、懸臂樑 | 近零頻率、網格、五種振型示意 |
+| Maxwell（3 篇） | 電位與電場、理想平行板 | 邊界與尖角、電壓／間距互動 |
+| LS-DYNA（3 篇） | 顯式時間、彈性方塊碰撞 | 時間步與能量、簡化彈簧碰撞互動 |
+| Fluent（3 篇） | 流體域、二維平行板層流 | 收斂與質量守恆、速度剖面互動 |
+
+Maxwell 在 Electronics Desktop 操作；其他三個專區由 Workbench 進入對應工具。所有示意與解析數值都有標記，不能當作實機求解資料。
+
+## 保留的 V2 圖解功能
 - 13 張可重建的原創 SVG 圖解；各篇依主題使用，不以同一張圖替代所有內容。
 - 五種互動振型：一階 Z 向彎曲、Y 向側彎、二階與三階 Z 向彎曲、扭轉概念。可切換、播放／暫停、調整相位與展示倍率。
 - 一句話摘要、螢光重點、並排概念卡與展開式觀察提示。
@@ -20,6 +32,7 @@
 python scripts/build.py
 python scripts/check.py
 node scripts/test_modes.cjs
+node scripts/test_labs.cjs
 python -m http.server 8000 --directory docs
 ```
 
@@ -31,7 +44,7 @@ python -m http.server 8000 --directory docs
 3. 在 GitHub 的 Settings（設定）→ Pages（頁面），Source（來源）選 Deploy from a branch（從分支部署）。
 4. Branch（分支）選 main，Folder（資料夾）選 /docs，按 Save（儲存）。
 5. 等待 GitHub Pages 完成。網址通常是 https://<帳號>.github.io/<儲存庫名稱>/ 。以 Pages 顯示的實際連結為準。
-6. 開啟網站，檢查首頁、四篇文章、搜尋及 AGENTS.md，再填入 SUBMISSION.md 的實際連結。
+6. 開啟網站，檢查首頁、十三篇文章、搜尋及 AGENTS.md，再填入 SUBMISSION.md 的實際連結。
 
 不需要填任何 API key，也不需要建置工作流程。若使用其他分支，請選實際存放檔案的分支。
 V2 另外附根目錄 index.html 自動導向 docs/index.html；即使 Pages 暫時仍使用 / (root)，也能進入網站，不會再只顯示 README。建議的正式設定仍為 main /docs。

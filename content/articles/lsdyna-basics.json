@@ -1,0 +1,160 @@
+{
+  "slug": "lsdyna-basics",
+  "category": "ls-dyna",
+  "kind": "concept",
+  "title": "碰撞的那一瞬間，為什麼要看時間？",
+  "summary": "用簡化碰撞玩懂動能、變形與回彈，再理解 LS-DYNA 的顯式時間步。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 10,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "知道速度、質量與能量的基本意義"
+  ],
+  "tags": [
+    "碰撞",
+    "顯式",
+    "動能",
+    "時間步",
+    "LS-DYNA"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "碰撞分析在追蹤==事情怎麼隨時間發生==；一張最大變形圖只回答其中一部分。"
+        },
+        {
+          "type": "list",
+          "items": [
+            "區分初始速度、接觸與材料反應。",
+            "分清求解時間步和結果儲存間隔。",
+            "用能量收支判讀，不只看動畫。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept",
+      "title": "核心觀念：先有速度，再發生接觸",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "LS-DYNA 可以處理多種分析；此專區先做顯式動力。計算會隨小時間步推進運動，接觸與材料模型決定力、變形和能量交換。Workbench（分析流程平台）的 LS-DYNA 系統和 Explicit Dynamics（顯式動力學）系統不是可以逐項互換的同一個設定表。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/impact-setup.svg",
+          "title": "碰撞前，先定好方向與接觸對象",
+          "alt": "碰撞前，先定好方向與接觸對象",
+          "caption": "本圖採向 −X 運動的方塊與左側固定擋塊，尺寸為教學自訂。"
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "title": "範例：能量在動能與彈簧間交換",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "下面是**單自由度質量＋線性彈簧接觸模型**：無摩擦、無阻尼，接觸只在壓縮時作用。它不是下篇三維方塊的等效參數辨識，也不會預測其接觸力或真實變形。"
+        },
+        {
+          "type": "lab",
+          "name": "impact"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/impact-energy.svg",
+          "title": "理想接觸中，能量如何交換？",
+          "alt": "理想接觸中，能量如何交換？",
+          "caption": "曲線依簡化模型的 sin²／cos² 關係繪製，不是 LS-DYNA 求解的能量歷程。"
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "title": "求解時間步和輸出間隔，分開記",
+      "blocks": [
+        {
+          "type": "figure",
+          "src": "assets/diagrams/explicit-steps.svg",
+          "title": "計算可能跑了很多步，只存下其中一些影格",
+          "alt": "計算可能跑了很多步，只存下其中一些影格",
+          "caption": "小點代表求解步、大點代表儲存時刻；只示意兩者差別，間距不是通用設定。"
+        },
+        {
+          "type": "p",
+          "text": "End Time（結束時間）控制要模擬多久；求解時間步控制如何穩定地推進；輸出間隔則控制能留下多少細節。顯式穩定步長與最小元素尺度、材料波速、元素公式及接觸等因素有關，不能單純把動畫影格設密就當成時間步變小。"
+        }
+      ]
+    },
+    {
+      "id": "mistakes",
+      "title": "常見誤解",
+      "blocks": [
+        {
+          "type": "note",
+          "title": "質量縮放不是免費加速",
+          "text": "Mass Scaling（質量縮放）可能增加非物理質量並改變慣性。是否可接受需要敏感度檢查；入門案例先不刻意加大此設定。"
+        },
+        {
+          "type": "checkpoint",
+          "title": "速度變成兩倍，起始動能變幾倍？",
+          "items": [
+            "在質量相同時，K = ½mv²，所以動能變成四倍。但實際最大變形與接觸峰值不一定依同一倍率增加。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "幾何、材料、初始條件、接觸與時間設定都要交代。",
+            "初始速度只給起始狀態，不是全程強迫維持速度。",
+            "對照能量、變形、接觸與時間歷程一起判讀。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS LS-DYNA — Setting up a Project",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/exd_ag_lsdyna_setting_up.html",
+      "version": "2024 R2",
+      "support": "Workbench LS-DYNA 的材料、連接、網格與分析設定。"
+    },
+    {
+      "title": "ANSYS LS-DYNA — Initial Conditions",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/lsdyna_ug_initial_conditions.html",
+      "version": "2024 R2",
+      "support": "初始平移速度、整個 part 的作用範圍與關鍵字。"
+    },
+    {
+      "title": "ANSYS LS-DYNA — Accessing Results",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/lsdyna_ug/exd_ag_lsdyna_results.html",
+      "version": "2024 R2",
+      "support": "全域能量、接觸力、反力與時間歷程輸出。"
+    },
+    {
+      "title": "ANSYS LS-DYNA Knowledge — Mass Scaling",
+      "url": "https://lsdyna.ansys.com/mass-scaling/",
+      "version": "原廠方法說明，非 2024 R2 介面",
+      "support": "質量縮放改變慣性，需檢查新增質量與結果敏感度。"
+    }
+  ],
+  "related": [
+    "lsdyna-impact",
+    "lsdyna-stability"
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "slug": "maxwell-capacitor",
+  "category": "maxwell",
+  "kind": "tutorial",
+  "title": "第一個 Maxwell：理想平行板間隙",
+  "summary": "在 Maxwell 2D 建立一個可用 E = ΔV/d 對照的理想靜電案例。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 18,
+  "updated": "2026-11-16",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "已安裝 Electronics Desktop 2024 R2 並有 Maxwell 授權",
+    "已讀電位與電場基本觀念"
+  ],
+  "tags": [
+    "平行板",
+    "Voltage",
+    "Electrostatic",
+    "邊界"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "先讓一個==有解析答案==的模型算合理，再增加真實結構的複雜度。"
+        },
+        {
+          "type": "list",
+          "items": [
+            "建立單一介質矩形與兩條等電位邊。",
+            "理解預設側邊界的作用。",
+            "用中央剖線檢查電位與電場。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "before",
+      "title": "前置條件：這是理想間隙模型",
+      "blocks": [
+        {
+          "type": "note",
+          "title": "圖解與解析參考，不是實機結果",
+          "text": "尚未在 Maxwell 執行本案例；下面的 100 kV/m 是解析參考值。模型不含有限電極邊緣、空氣擊穿、空間電荷與介質非線性。"
+        },
+        {
+          "type": "p",
+          "text": "只建立電極之間的介質區，以上、下邊的電壓代表理想導體表面；不另外畫銅板，也不包外部空氣盒。左右側採預設 Neumann（零法向電通量）邊界，強制電場沿側邊切向；這與外部開放空間不同。"
+        }
+      ]
+    },
+    {
+      "id": "parameters",
+      "title": "案例參數",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": [
+            "項目",
+            "教學設定"
+          ],
+          "rows": [
+            [
+              "幾何",
+              "XY 平面矩形：x = 0～40 mm，y = 0～10 mm。"
+            ],
+            [
+              "材料",
+              "vacuum（真空），相對介電常數 1；作為均勻無電荷介質。"
+            ],
+            [
+              "上／下邊",
+              "y = 10 mm 設 1000 V；y = 0 設 0 V。"
+            ],
+            [
+              "左右邊",
+              "預設 Neumann；不要設成 0 V。"
+            ],
+            [
+              "求解",
+              "Electrostatic（靜電場）、Cartesian XY（平面）。"
+            ],
+            [
+              "對照",
+              "中央區 |E| = 100000 V/m；V(y) = 1000 y / 10 mm。"
+            ]
+          ]
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/maxwell-boundaries.svg",
+          "title": "選取對象是上、下兩條邊",
+          "alt": "選取對象是上、下兩條邊",
+          "caption": "矩形代表介質；電壓只給指定邊，左右是理想化的零法向通量邊界。"
+        }
+      ]
+    },
+    {
+      "id": "setup",
+      "title": "操作步驟：建立模型與激勵",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "建立設計",
+              "text": "開啟 Electronics Desktop（電子設計平台），建立專案並 Insert Maxwell 2D Design（插入 Maxwell 二維設計）。用 Maxwell 2D（二維電磁）→ Solution Type（求解類型）選 Electrostatic（靜電場），確認為 XY 平面模式。"
+            },
+            {
+              "title": "畫出介質矩形",
+              "text": "在 Modeler（建模器）確認單位 mm，使用 Draw（繪製）→ Rectangle（矩形），起點 (0,0,0)，X 向 40 mm、Y 向 10 mm。指派 vacuum（真空），確認介質內部參與求解。"
+            },
+            {
+              "title": "指定高電位邊",
+              "text": "切換 Edge（邊）選取，選 y = 10 mm 的整條上邊。使用 Maxwell 2D（二維電磁）→ Excitations（激勵）→ Assign（指派）→ Voltage（電壓），名稱 Top_1000V，Value（值）填 1000 V。"
+            },
+            {
+              "title": "指定參考邊",
+              "text": "選 y = 0 的整條下邊，以相同 Voltage（電壓）指派 Bottom_0V = 0 V。檢查樹狀清單中的選取範圍，避免誤把整個介質物件設成等電位。"
+            },
+            {
+              "title": "保留左右預設邊界",
+              "text": "左右兩邊保持未額外指派的預設 Neumann。不要加接地，不使用 Balloon（無限遠邊界）來改變這個基準案例。"
+            },
+            {
+              "title": "新增求解設定",
+              "text": "右鍵 Analysis（分析）→ Add Solution Setup（新增求解設定）。先記錄 Maximum Number of Passes（最大自適應次數）與 Percent Error（誤差百分比）的預設值；執行 Validate（檢查）與 Analyze All（全部分析）。預設值不是本研究已證明的收斂標準。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "results",
+      "title": "操作步驟：看電位與電場",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "建立場圖",
+              "text": "求解成功後，選介質區，在 Field Overlays（場顯示）建立電位與 Mag_E（電場強度）圖；可由所選幾何的 Plot Fields（繪製場）選單進入。分開標示 V 與 V/m，避免把兩個色階混用。"
+            },
+            {
+              "title": "建立中央剖線",
+              "text": "以 Draw（繪製）→ Polyline（折線）建立 x = 20 mm、y = 1～9 mm 的線段。透過 Results（結果）→ Create Fields Report（建立場報表）→ Rectangular Plot（直角座標圖），以此線作 Geometry（幾何），觀察電位與 Mag_E（電場強度）。"
+            },
+            {
+              "title": "保存檢查紀錄",
+              "text": "確認 V 隨 y 近似線性增加，場方向由上往下；中央 |E| 與解析參考比對。記錄網格量、pass、誤差與剖線資料，再改細網格比較。完成後才可補入自己的求解值與截圖。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "checks",
+      "title": "結果檢查",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "中央 E 場方向應為 −Y，強度接近解析參考，而不是只看彩色圖是否漂亮。",
+            "若介質全同電位，先查是否把整個物件指定為同一電壓。",
+            "比較兩次自適應結果與中央線，並保留實際資料；沒有達到自訂精度前不宣稱完成收斂。"
+          ]
+        },
+        {
+          "type": "lab",
+          "name": "electrostatic"
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "這是理想化均勻間隙，不是有限平行板外部空間的完整模型。",
+            "邊界指派與選取對象決定了你實際在解什麼問題。",
+            "下一步再增加有限電極、圓角、介電層與更大的求解區域。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Maxwell — 2D Electrostatic Voltage Excitation",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/AssigningaVoltageExcitationfora2DElectrostaticSolver.htm",
+      "version": "2024 R2",
+      "support": "電壓激勵的選取、選單路徑及數值／單位。"
+    },
+    {
+      "title": "ANSYS Maxwell — 2D Electrostatic Boundaries",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/2DElectrostaticBoundaries.htm",
+      "version": "2024 R2",
+      "support": "預設外邊界為 Neumann，與接地不同；自然介面與對稱邊界。"
+    },
+    {
+      "title": "ANSYS Maxwell 2D Technical Notes",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/Electronics/v242/en/Subsystems/Maxwell/Content/Maxwell2DTechnicalNotes.htm",
+      "version": "2024 R2",
+      "support": "Maxwell 2D 的平面／軸對稱假設與可用分析類型。"
+    }
+  ],
+  "related": [
+    "maxwell-basics",
+    "maxwell-field-check"
+  ]
+}
