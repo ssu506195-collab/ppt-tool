@@ -1,0 +1,154 @@
+{
+  "category": "modal",
+  "version": "2024 R2",
+  "level": "入門",
+  "updated": "2026-11-14",
+  "verification": "文件查證／待實機驗證",
+  "slug": "modal-basics",
+  "kind": "concept",
+  "title": "先讀懂固有頻率，再看振型",
+  "summary": "分清楚結構喜歡怎麼振動，以及外力會讓它振多大，建立第一個模態分析前的基本觀念。",
+  "minutes": 6,
+  "prerequisites": [
+    "知道質量、剛性與頻率的基本意義"
+  ],
+  "tags": [
+    "固有頻率",
+    "振型",
+    "正規化"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "分辨固有頻率、激振頻率與振型。",
+            "理解模態分析的輸入與輸出。",
+            "知道為什麼振型圖上的最大變形量不能當成實際位移。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concept",
+      "title": "核心觀念：結構的動態特徵",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "固有頻率描述結構在特定材料、幾何與拘束下的自由振動特性；振型描述各位置彼此如何移動。修改夾持方式，即使幾何與材料不變，也可能得到不同的結果。"
+        },
+        {
+          "type": "formula",
+          "text": "(K − ω²M)φ = 0　；　f = ω / (2π)"
+        },
+        {
+          "type": "p",
+          "text": "這是線性、無阻尼自由振動的特徵值問題。K 是剛性矩陣，M 是質量矩陣，φ 是振型，ω 的單位是 rad/s，f 的單位是 Hz。這個入門案例不包含預應力、旋轉效應與阻尼。"
+        },
+        {
+          "type": "table",
+          "headers": [
+            "名詞",
+            "你應該怎麼理解"
+          ],
+          "rows": [
+            [
+              "Natural Frequency（固有頻率）",
+              "結構在指定條件下的動態特徵。"
+            ],
+            [
+              "Excitation Frequency（激振頻率）",
+              "外力或其他輸入隨時間重複的頻率。"
+            ],
+            [
+              "Mode Shape（振型）",
+              "同一模態內各處的相對移動形狀。"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "title": "範例：一把固定在桌邊的尺",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "將尺的一端夾住，另一端輕輕撥動。改變伸出桌邊的長度，振動特性也會改變。這是理解「幾何與拘束會影響固有頻率」的生活比喻，不是本網站的量測結果。"
+        },
+        {
+          "type": "beam"
+        }
+      ]
+    },
+    {
+      "id": "inputs",
+      "title": "開始前要準備的資料",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "幾何尺寸與一致的單位。",
+            "材料的彈性性質與質量資訊；本教學以楊氏模數、蒲松比及密度描述均質材料。",
+            "能代表實際安裝方式的拘束；組合件還要檢查零件間連接。",
+            "希望觀察的頻率範圍及模態數，並以網格檢查確認關注結果是否穩定。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mistakes",
+      "title": "常見誤解",
+      "blocks": [
+        {
+          "type": "note",
+          "title": "振型振幅不是實際受迫位移",
+          "text": "模態振型具有縮放與正規化的特性。雲圖顯示的最大數值，不能直接當作實際運轉位移，也不能用來比較不同模型誰一定振得比較大。"
+        },
+        {
+          "type": "p",
+          "text": "固有頻率接近某個激振頻率，代表需要進一步評估動態響應。實際振幅還取決於激振位置、方向、阻尼及模態耦合，不能僅憑頻率接近就宣稱已發生嚴重共振。"
+        },
+        {
+          "type": "p",
+          "text": "多求幾百階不等於分析更正確。模態數應依研究頻帶與後續分析需求選擇；入門案例先看前六階。"
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "模態分析先回答「有哪些頻率與振動形狀」。",
+            "結果會隨材料、幾何與拘束改變。",
+            "先檢查物理條件，再討論頻率與振型。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Theory Reference — Modal Analysis",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/ans_thry/thy_anproc3.html",
+      "version": "2024 R2",
+      "support": "無阻尼自由振動假設、特徵值問題與正規化。"
+    },
+    {
+      "title": "ANSYS Mechanical User’s Guide — Modal Analysis",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/wb_sim/ds_modal_analysis_type.html",
+      "version": "2024 R2",
+      "support": "Workbench 模態分析流程、材料需求與振型結果判讀。"
+    }
+  ],
+  "related": [
+    "modal-cantilever",
+    "modal-zero-frequency"
+  ]
+}

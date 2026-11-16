@@ -1,0 +1,85 @@
+{
+  "slug": "modal-new-lesson",
+  "category": "modal",
+  "kind": "concept",
+  "title": "新觀念的清楚標題",
+  "summary": "說明這篇文章解決什麼問題。",
+  "version": "2024 R2",
+  "level": "入門",
+  "minutes": 5,
+  "updated": "2026-11-14",
+  "verification": "文件查證／待實機驗證",
+  "prerequisites": [
+    "填入前置知識"
+  ],
+  "tags": [
+    "填入關鍵詞"
+  ],
+  "sections": [
+    {
+      "id": "goals",
+      "title": "學習目標",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "填入可確認的學習成果"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "concepts",
+      "title": "核心觀念",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "查證後再填入觀念。"
+        }
+      ]
+    },
+    {
+      "id": "example",
+      "title": "範例",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "清楚標記理論估算或示例設定。"
+        }
+      ]
+    },
+    {
+      "id": "mistakes",
+      "title": "常見誤解",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "說明適用條件。"
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "填入重點"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "填入實際閱讀的來源",
+      "url": "https://ansyshelp.ansys.com/",
+      "version": "2024 R2",
+      "support": "填入來源支持的具體內容；不要保留此範例來源交付。"
+    }
+  ],
+  "related": [
+    "modal-basics"
+  ]
+}

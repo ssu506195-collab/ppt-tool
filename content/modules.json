@@ -1,0 +1,30 @@
+[
+  {
+    "id": "modal",
+    "name": "模態分析",
+    "tool": "Mechanical",
+    "desc": "從固有頻率與振型出發，建立可重現的結構動力學分析流程。",
+    "ready": true
+  },
+  {
+    "id": "maxwell",
+    "name": "電磁場分析",
+    "tool": "Maxwell",
+    "desc": "規劃整理材料、激勵、邊界與電磁場結果；目前尚未收錄教學。",
+    "ready": false
+  },
+  {
+    "id": "ls-dyna",
+    "name": "顯式動力分析",
+    "tool": "LS-DYNA",
+    "desc": "規劃整理接觸、材料、時間步長與動態結果；目前尚未收錄教學。",
+    "ready": false
+  },
+  {
+    "id": "fluent",
+    "name": "流體分析",
+    "tool": "Fluent",
+    "desc": "規劃整理流體域、網格、邊界條件與收斂；目前尚未收錄教學。",
+    "ready": false
+  }
+]

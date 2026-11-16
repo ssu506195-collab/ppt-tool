@@ -1,0 +1,166 @@
+{
+  "category": "modal",
+  "version": "2024 R2",
+  "level": "入門",
+  "updated": "2026-11-14",
+  "verification": "文件查證／待實機驗證",
+  "slug": "modal-zero-frequency",
+  "kind": "troubleshooting",
+  "title": "接近 0 Hz：先看振型，再改設定",
+  "summary": "從自由結構、拘束不足到未連接零件，依序找出近零頻率的物理意義。",
+  "minutes": 7,
+  "prerequisites": [
+    "能查看各階振型與分析樹狀目錄"
+  ],
+  "tags": [
+    "0 Hz",
+    "剛體模態",
+    "拘束",
+    "連通性"
+  ],
+  "sections": [
+    {
+      "id": "symptom",
+      "title": "問題現象",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "求解後前幾階頻率接近 0 Hz，動畫看起來像整個物件移動，或只有某個零件飄動。此頁是文件整理的排查流程，並非某個實驗室模型已確認的修復紀錄。"
+        }
+      ]
+    },
+    {
+      "id": "scope",
+      "title": "適用情境",
+      "blocks": [
+        {
+          "type": "p",
+          "text": "先問模型本來是否應該自由移動。單一完整、自由懸浮且沒有內部機構的三維彈性結構，具有六個剛體運動方向：三個平移、三個轉動。若研究本來就是自由—自由條件，近零剛體模態可能符合預期。"
+        },
+        {
+          "type": "note",
+          "title": "不要直接刪除前六階",
+          "text": "受部分拘束、含多個不連接零件或可動機構時，剛體模態數量與表現會改變。不能不看振型就一律刪除前六階，也不能用單一絕對 Hz 門檻判斷所有模型。"
+        }
+      ]
+    },
+    {
+      "id": "sequence",
+      "title": "檢查順序",
+      "blocks": [
+        {
+          "type": "steps",
+          "items": [
+            {
+              "title": "確認實際安裝方式",
+              "text": "在更動模型前，寫下實物如何支撐、夾持或連接。自由試驗與固定安裝是不同的分析問題，不應為了消除近零值任意加固定端。"
+            },
+            {
+              "title": "觀察是哪個物件在移動",
+              "text": "在 Solution（求解與結果）中建立對應階數的 Total Deformation（總變形），播放動畫。分辨是整體平移／轉動、局部零件獨立移動，還是結構實際彎曲。"
+            },
+            {
+              "title": "檢查拘束選取與啟用狀態",
+              "text": "選 Fixed Support（固定支撐）或其他拘束，檢查 Geometry（幾何）是否指向預期的面、Suppressed（抑制）是否為 No（否）。重新檢視高亮區域；不要只看樹狀目錄裡有沒有拘束名稱。"
+            },
+            {
+              "title": "檢查零件連通性",
+              "text": "若只有單一零件漂動，展開 Connections（連接）檢查接觸配對與預期連接。必要時使用 Contact Tool（接觸工具）查看初始狀態。幾何看起來相碰，不保證已形成有效的力學連接。"
+            },
+            {
+              "title": "依物理需求檢查接觸類型",
+              "text": "Bonded（黏結）與 No Separation（不分離）對相對滑動的限制不同。接觸在模態分析中的處理還受初始狀態、預應力與線性化方式影響；不能一律改成黏結來掩蓋不合理結果。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fix",
+      "title": "處理方式",
+      "blocks": [
+        {
+          "type": "table",
+          "headers": [
+            "檢查得到的情況",
+            "合理的下一步"
+          ],
+          "rows": [
+            [
+              "本來就是自由—自由分析",
+              "保留並記錄剛體模態；往後尋找彈性模態。"
+            ],
+            [
+              "應固定但固定面選錯",
+              "依實際夾持位置修正面選取，重新求解。"
+            ],
+            [
+              "零件應相連但未有效連接",
+              "修正幾何、接觸配對或連接定義，再查看振型是否符合預期。"
+            ],
+            [
+              "振型有明顯彈性變形且頻率很低",
+              "檢查柔性、尺寸、材料、質量與單位；低頻本身不是錯誤證據。"
+            ],
+            [
+              "目前仍無法判斷",
+              "保留原始模型，記錄修改前後條件與警告，避免一次同時改多項。"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "done",
+      "title": "完成條件",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "能說明每個近零模態是預期剛體運動，還是未預期的自由度。",
+            "修改有物理依據，且留有前後對照。",
+            "依序檢查彈性振型與網格，不只確認 0 Hz 消失。"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "重點整理",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "先判讀振型，再判斷拘束與連接是否合理。",
+            "不使用「全部黏結」或「全部固定」作為通用修復。",
+            "實機驗證後，補入模型版本、原因、處理結果與證據。"
+          ]
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ANSYS Innovation Courses — Evaluate Rigid-Body Modes",
+      "url": "https://innovationspace.ansys.com/courses/courses/modal-analysis-in-ansys-mechanical/lessons/how-to-evaluate-rigid-body-modes-in-a-modal-analysis-lesson-4/",
+      "version": "原廠課程，非限定版本",
+      "support": "自由結構的剛體模態、接觸與連通性檢查。"
+    },
+    {
+      "title": "ANSYS Mechanical User’s Guide — Fixed Support",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/wb_sim/ds_Fixed_Supports.html",
+      "version": "2024 R2",
+      "support": "固定支撐用途、插入方法與幾何選取。"
+    },
+    {
+      "title": "ANSYS Mechanical User’s Guide — Modal Analysis",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/wb_sim/ds_modal_analysis_type.html",
+      "version": "2024 R2",
+      "support": "Workbench 模態分析流程、材料需求與振型結果判讀。"
+    }
+  ],
+  "related": [
+    "modal-basics",
+    "modal-cantilever"
+  ]
+}
