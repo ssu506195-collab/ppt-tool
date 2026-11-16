@@ -2,6 +2,7 @@
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 from pathlib import Path
+import xml.etree.ElementTree as ET
 from build import ROOT, OUT, load_content
 
 class Page(HTMLParser):
@@ -22,6 +23,10 @@ class Page(HTMLParser):
 
 def check():
     _,articles=load_content()
+    diagrams=list((ROOT/'assets'/'diagrams').glob('*.svg'))
+    for diagram in diagrams:
+        assert ET.parse(diagram).getroot().tag.endswith('svg'), 'Invalid SVG'
+    print(f'PASS: {len(diagrams)} educational SVG documents parse correctly.')
     pages={p:Page(p.read_text(encoding='utf-8')) for p in OUT.rglob('*.html')}
     links=0
     for path,page in pages.items():

@@ -6,9 +6,9 @@
 本專案建立實驗室 ANSYS 學習與問題整理站，第一版以 Workbench 2024 R2 的 Mechanical 模態分析為主。網站包含觀念筆記、懸臂樑操作教學、近零頻率排查與網格檢查，英文介面選項附繁體中文說明，供自己學習並作為日後學弟妹的交接資料。
 
 ## 繳交連結
-- GitHub Repository：〔部署後填入實際連結〕
-- 公開網頁：〔部署後填入 GitHub Pages 實際連結〕
-- AGENTS.md：〔填入儲存庫根目錄 AGENTS.md 的連結，並可同時附檔〕
+- GitHub Repository：https://github.com/ssu506195-collab/ppt-tool
+- 公開網頁：https://ssu506195-collab.github.io/ppt-tool/ （請於上傳新版後再次確認）
+- AGENTS.md：https://github.com/ssu506195-collab/ppt-tool/blob/main/AGENTS.md
 
 ## 規則如何幫助 AI 繼續完成？
 AGENTS.md 定義專案目的、2024 R2 版本、英文搭配中文的寫法、三種文章格式、檔名與目錄結構、官方來源與實機驗證規則，以及生成與檢查指令。新增內容時，AI 先依模板建立文章資料，再執行生成器，自動更新文章頁、首頁、分類列表與搜尋資料，因此不需要每次重新設計版型。
@@ -17,3 +17,6 @@ AGENTS.md 定義專案目的、2024 R2 版本、英文搭配中文的寫法、�
 
 ## 驗證說明
 內容已查閱官方文件。尚未執行 ANSYS 求解，沒有將理論或示例數值宣稱為實際模擬結果。網站檢查結果請參見 VALIDATION.md。
+
+## 圖解如何遵循同一套規則？
+V2 在 AGENTS.md 加入圖解與互動教學規則，定義重點標記、圖說、解析振型來源及放大慢放等界線。每篇透過同一組 figure、modes、spotlight、compare、details 等區塊呈現，不需要重新設計每一個網頁；新增文章後，生成器會檢查至少有一個相關圖解。

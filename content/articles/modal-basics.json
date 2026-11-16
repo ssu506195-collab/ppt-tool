@@ -2,13 +2,13 @@
   "category": "modal",
   "version": "2024 R2",
   "level": "入門",
-  "updated": "2026-11-14",
+  "updated": "2026-11-16",
   "verification": "文件查證／待實機驗證",
   "slug": "modal-basics",
   "kind": "concept",
   "title": "先讀懂固有頻率，再看振型",
-  "summary": "分清楚結構喜歡怎麼振動，以及外力會讓它振多大，建立第一個模態分析前的基本觀念。",
-  "minutes": 6,
+  "summary": "像看一支尺的不同振動姿勢：先玩振型示意，再分清楚固有頻率、節點與顯示振幅。",
+  "minutes": 10,
   "prerequisites": [
     "知道質量、剛性與頻率的基本意義"
   ],
@@ -22,6 +22,11 @@
       "id": "goals",
       "title": "學習目標",
       "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "模態分析在找：這個結構在指定條件下，有哪些==固有頻率==，以及對應的==振動形狀==。"
+        },
         {
           "type": "list",
           "items": [
@@ -39,6 +44,13 @@
         {
           "type": "p",
           "text": "固有頻率描述結構在特定材料、幾何與拘束下的自由振動特性；振型描述各位置彼此如何移動。修改夾持方式，即使幾何與材料不變，也可能得到不同的結果。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/what-changes.svg",
+          "title": "先看三個會影響結果的條件",
+          "alt": "幾何、材料、拘束共同影響動態特徵。",
+          "caption": "概念圖；比較結果前，要先確認輸入條件。"
         },
         {
           "type": "formula",
@@ -73,14 +85,56 @@
     },
     {
       "id": "example",
-      "title": "範例：一把固定在桌邊的尺",
+      "title": "範例：讓懸臂樑動起來",
       "blocks": [
         {
           "type": "p",
-          "text": "將尺的一端夾住，另一端輕輕撥動。改變伸出桌邊的長度，振動特性也會改變。這是理解「幾何與拘束會影響固有頻率」的生活比喻，不是本網站的量測結果。"
+          "text": "想像把尺的一端夾在桌邊。點下不同型態，看看它可以往上彎、往側面彎，或讓截面扭轉。先按==播放==，再把相位停在你想觀察的位置。"
         },
         {
-          "type": "beam"
+          "type": "modes"
+        },
+        {
+          "type": "compare",
+          "items": [
+            {
+              "title": "先看哪裡不動",
+              "text": "固定端保持不動；較高彎曲振型還可能有內部節點。"
+            },
+            {
+              "title": "再看往哪裡動",
+              "text": "Y 向和 Z 向彎曲是不同方向；扭轉則是截面繞長軸旋轉。"
+            },
+            {
+              "title": "最後記住顯示比例",
+              "text": "放大、慢放是為了看清楚。它們不等於實際振幅或真實振動速度。"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mode-family",
+      "title": "一眼看懂：彎曲階次與內部節點",
+      "blocks": [
+        {
+          "type": "figure",
+          "src": "assets/diagrams/mode-family.svg",
+          "title": "同方向前三個彎曲振型",
+          "alt": "同方向一、二、三階彎曲分別有零、一、兩個內部節點。",
+          "caption": "依 Euler–Bernoulli 解析式繪製；這是同方向的彎曲家族，不是三維 ANSYS 前三階排序。"
+        },
+        {
+          "type": "p",
+          "text": "這裡的內部節點，指梁理論中**中心線橫向位移為零**的位置，不代表三維實體該截面上每一點的總位移都為零。**固定端不算內部節點**。同方向彎曲階次提高時，會看到更多反向彎動的區域。"
+        },
+        {
+          "type": "checkpoint",
+          "title": "想一想：振型動畫變成直線，代表振型消失了嗎？",
+          "items": [
+            "不一定。在動畫中，中心線可能同時經過平衡位置；這只是相位改變。內部節點則是在整個振動週期中，中心線橫向位移保持為零的位置。",
+            "把二階彎曲的相位從 90° 拉到 270°，形狀方向會反轉，但內部節點的位置保持不變。"
+          ]
         }
       ]
     },
@@ -104,9 +158,26 @@
       "title": "常見誤解",
       "blocks": [
         {
+          "type": "compare",
+          "items": [
+            {
+              "title": "固有頻率",
+              "text": "結構本身在這組材料、幾何與拘束下的動態特徵。"
+            },
+            {
+              "title": "激振頻率",
+              "text": "外力或運轉輸入重複出現的頻率，來自輸入條件。"
+            },
+            {
+              "title": "實際振幅",
+              "text": "還受輸入力、方向、阻尼等影響，基本模態分析不直接給出。"
+            }
+          ]
+        },
+        {
           "type": "note",
           "title": "振型振幅不是實際受迫位移",
-          "text": "模態振型具有縮放與正規化的特性。雲圖顯示的最大數值，不能直接當作實際運轉位移，也不能用來比較不同模型誰一定振得比較大。"
+          "text": "振型會經過正規化與顯示縮放。請讀==相對形狀==，雲圖最大值不能直接當作實際運轉位移，也不能拿來判斷不同模型誰一定振得更大。"
         },
         {
           "type": "p",
@@ -122,6 +193,11 @@
       "id": "summary",
       "title": "重點整理",
       "blocks": [
+        {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "先讀懂==形狀與相對運動==，再討論頻率；不要把雲圖的最大值直接當成實際運轉位移。"
+        },
         {
           "type": "list",
           "items": [
@@ -145,6 +221,18 @@
       "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/wb_sim/ds_modal_analysis_type.html",
       "version": "2024 R2",
       "support": "Workbench 模態分析流程、材料需求與振型結果判讀。"
+    },
+    {
+      "title": "Graz University of Technology — Cantilever beam",
+      "url": "https://lampz.tugraz.at/~hadley/memm/mechanics/cbeam.php",
+      "version": "梁理論教材；非 ANSYS 版本限定",
+      "support": "懸臂樑彎曲的邊界條件、解析振型及特徵根。互動繪圖依此式計算。"
+    },
+    {
+      "title": "ANSYS / Cornell — Cantilever Beam Modal Analysis: Pre-Analysis",
+      "url": "https://innovationspace.ansys.com/courses/courses/cantilever-beam-modal-analysis/lessons/pre-analysis-start-up-lesson-2-32/topic/pre-analysis/",
+      "version": "原廠梁理論課程；非 2024 R2 操作介面",
+      "support": "Euler–Bernoulli 彎曲振型與理論預估；本網站未使用課程的範例頻率作為自身結果。"
     }
   ],
   "related": [

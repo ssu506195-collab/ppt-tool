@@ -40,3 +40,19 @@
   filters.forEach(el => el.addEventListener('click', () => { filter = el.dataset.filter; filters.forEach(x => { const active = x === el; x.classList.toggle('active', active); x.setAttribute('aria-pressed', String(active)); }); search(); }));
   input?.addEventListener('input', search);
 })();
+
+/* SVG figures remain links without JavaScript; with JS they open a zoomable dialog. */
+(function(){
+  var links=document.querySelectorAll('[data-figure-zoom]');if(!links.length||typeof HTMLDialogElement==='undefined')return;
+  var dialog=document.createElement('dialog');dialog.className='figure-dialog';
+  var toolbar=document.createElement('div');toolbar.className='figure-dialog-toolbar';
+  var title=document.createElement('h2');title.id='figure-dialog-title';toolbar.appendChild(title);
+  var close=document.createElement('button');close.type='button';close.textContent='關閉 ✕';close.setAttribute('aria-label','關閉放大圖解');toolbar.appendChild(close);
+  var scroll=document.createElement('div');scroll.className='figure-dialog-scroll';scroll.tabIndex=0;scroll.setAttribute('aria-label','放大圖解，可左右捲動');
+  var image=document.createElement('img');scroll.appendChild(image);
+  var caption=document.createElement('p');caption.className='figure-dialog-caption';
+  dialog.appendChild(toolbar);dialog.appendChild(scroll);dialog.appendChild(caption);dialog.setAttribute('aria-labelledby',title.id);document.body.appendChild(dialog);
+  links.forEach(function(link){link.addEventListener('click',function(event){event.preventDefault();title.textContent=link.dataset.figureTitle;image.src=link.href;image.alt=link.querySelector('img').alt;caption.textContent=link.closest('figure').querySelector('figcaption').textContent;dialog.showModal();});});
+  close.addEventListener('click',function(){dialog.close();});
+  dialog.addEventListener('click',function(event){if(event.target===dialog)dialog.close();});
+})();

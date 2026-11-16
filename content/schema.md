@@ -17,3 +17,12 @@ blocks 支援：
 所有文字均經 HTML escape；不要在內容中寫 HTML 或 Markdown 語法。
 必要段落標題見 AGENTS.md 第 5 節，必須含對應詞語。
 
+
+## V2 圖解與重點區塊
+所有文字可使用 **粗體** 與 ==重點標記==；渲染前先 escape，不接受原始 HTML。
+- spotlight：{type,label,text}，每篇的短摘要或觀察提示。
+- figure：{type,src,title,alt,caption}，src 指向 assets/diagrams/ 的 SVG，所有欄位必填。圖說交代示意範圍與是否實機。
+- modes：{type:"modes"}，沿用共用五型態振型互動，不自行硬編實際頻率或三維階數。
+- compare：{type,items:[{title,text}]}，二至三個並排概念或比較。
+- details / checkpoint：{type,title,items:["段落"]}，以可展開說明補充觀念或思考提示。
+圖解資料依據 scripts/make_diagrams.py 與 assets/modal-math.js，彎曲振型以解析式繪製。數學測試位於 scripts/test_modes.cjs。

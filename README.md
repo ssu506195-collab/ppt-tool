@@ -3,8 +3,15 @@
 提供初學者可以接續使用的模擬筆記。第一版主題是 ANSYS Workbench 2024 R2 / Mechanical 模態分析；使用英文介面名稱搭配繁體中文說明。教學目前為文件查證，尚待 ANSYS 實機驗證。
 
 ## 快速瀏覽
-開啟 docs/index.html 即可離線瀏覽。搜尋、文章類型篩選、已讀進度、手機導覽與列印不需要 API。
+開啟 docs/index.html 即可離線瀏覽。搜尋、文章類型篩選、已讀進度、手機導覽、振型播放與圖解放大都不需要 API。
 若瀏覽器限制本機儲存，已讀進度只在目前頁面暫存；網站內容仍可閱讀。
+
+## V2 圖解版新增內容
+- 13 張可重建的原創 SVG 圖解；各篇依主題使用，不以同一張圖替代所有內容。
+- 五種互動振型：一階 Z 向彎曲、Y 向側彎、二階與三階 Z 向彎曲、扭轉概念。可切換、播放／暫停、調整相位與展示倍率。
+- 一句話摘要、螢光重點、並排概念卡與展開式觀察提示。
+- 手機可點圖解放大，再左右捲動查看。沒有 JavaScript 時，SVG 連結仍可直接打開。
+- 彎曲使用 Euler–Bernoulli 解析式；扭轉僅作幾何概念示意。沒有虛構 ANSYS 頻率或真實求解雲圖。
 
 ## 重新生成與檢查
 需要 Python 3.10 以上，僅使用標準函式庫，不需要 pip 或 npm。
@@ -12,6 +19,7 @@
 ```sh
 python scripts/build.py
 python scripts/check.py
+node scripts/test_modes.cjs
 python -m http.server 8000 --directory docs
 ```
 
@@ -26,6 +34,7 @@ python -m http.server 8000 --directory docs
 6. 開啟網站，檢查首頁、四篇文章、搜尋及 AGENTS.md，再填入 SUBMISSION.md 的實際連結。
 
 不需要填任何 API key，也不需要建置工作流程。若使用其他分支，請選實際存放檔案的分支。
+V2 另外附根目錄 index.html 自動導向 docs/index.html；即使 Pages 暫時仍使用 / (root)，也能進入網站，不會再只顯示 README。建議的正式設定仍為 main /docs。
 
 ## 如何新增內容
 AI 先讀 AGENTS.md，再依 content/schema.md 複製 templates/article.json 建立 content/articles/<slug>.json。
@@ -36,3 +45,7 @@ AI 先讀 AGENTS.md，再依 content/schema.md 複製 templates/article.json 建
 各篇文章附有官方文件連結及支援範圍。尺寸與材料是自訂教學案例，幾何圖為原創示意，不是求解雲圖。
 網站自動檢查不等於模擬實機驗證。只有完成操作並留有操作者、日期與證據，才能改成「實機驗證」。
 本專案獨立整理，與 ANSYS 無隸屬關係。官方文件仍以其原始著作權與使用條款為準；不要上傳機密模型、授權檔或未經同意的研究資料。
+
+## 圖解與風格參考
+視覺節奏參考老師提供的 DiveAI 講義庫（https://diveai-lab.github.io/diveai-lessons/）中短段落、重點標記與圖文搭配的方式。本專案的內容、程式、梁形圖及配色元件獨立製作，未使用其角色圖、商標或講義原文。
+梁理論來源與適用範圍見各篇參考來源，以及 DIAGRAMS.md。

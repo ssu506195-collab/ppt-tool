@@ -7,7 +7,7 @@
   "version": "2024 R2",
   "level": "入門",
   "minutes": 5,
-  "updated": "2026-11-14",
+  "updated": "2026-11-16",
   "verification": "文件查證／待實機驗證",
   "prerequisites": [
     "填入前置知識"
@@ -35,6 +35,13 @@
         {
           "type": "p",
           "text": "查證後再填入觀念。"
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/workflow.svg",
+          "title": "請替換為本篇相關圖解",
+          "alt": "請描述圖解傳達的資訊",
+          "caption": "請交代圖解範圍、來源與驗證狀態，不要保留此提示後發佈。"
         }
       ]
     },

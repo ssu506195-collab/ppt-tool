@@ -2,7 +2,7 @@
   "category": "modal",
   "version": "2024 R2",
   "level": "入門",
-  "updated": "2026-11-14",
+  "updated": "2026-11-16",
   "verification": "文件查證／待實機驗證",
   "slug": "modal-cantilever",
   "kind": "tutorial",
@@ -25,12 +25,24 @@
       "title": "學習目標",
       "blocks": [
         {
+          "type": "spotlight",
+          "label": "一句話先懂",
+          "text": "把==一端固定==的長方形樑建好，讓程式找出它可能的振動姿勢。今天先把一個案例做完整。"
+        },
+        {
           "type": "list",
           "items": [
             "完成單一實體的一端固定、另一端自由模型。",
             "在英文介面辨認材料、網格、拘束與結果位置。",
             "記錄前六階頻率，並逐一檢查振型。"
           ]
+        },
+        {
+          "type": "figure",
+          "src": "assets/diagrams/workflow.svg",
+          "title": "先認識三個工作環境",
+          "alt": "Workbench 串接流程，DesignModeler 建幾何，Mechanical 設定與讀結果。",
+          "caption": "原創流程圖；不是軟體畫面截圖。"
         }
       ]
     },
@@ -41,7 +53,7 @@
         {
           "type": "note",
           "title": "文件查證／待實機驗證",
-          "text": "操作流程依 2024 R2 官方文件整理，尚未在 ANSYS 中逐步執行。本頁沒有提供偽造的求解結果；完成實機後，應補上實際截圖、頻率表、網格資訊與操作者紀錄。"
+          "text": "流程依 2024 R2 官方文件整理，圖解幫助你預先理解。完成實機操作後，再補上自己的頻率、網格與振型截圖。"
         },
         {
           "type": "p",
@@ -99,7 +111,11 @@
           ]
         },
         {
-          "type": "beam"
+          "type": "figure",
+          "src": "assets/diagrams/fixed-face.svg",
+          "title": "固定的是整個端面",
+          "alt": "長方形樑左側完整端面被固定，其餘表面自由。",
+          "caption": "教學幾何與拘束示意；實機要確認高亮的是 X = 0 端面。"
         }
       ]
     },
@@ -166,6 +182,13 @@
       "title": "操作步驟三：求解與記錄",
       "blocks": [
         {
+          "type": "figure",
+          "src": "assets/diagrams/read-results.svg",
+          "title": "求解後，眼睛先去這三個地方",
+          "alt": "結果表的階數與頻率，振型形狀，及相對位移顏色。",
+          "caption": "結果閱讀概念圖；表格中的數值欄刻意保留待求解，不是實機資料。"
+        },
+        {
           "type": "steps",
           "items": [
             {
@@ -193,6 +216,19 @@
       "title": "結果檢查",
       "blocks": [
         {
+          "type": "spotlight",
+          "label": "觀察任務",
+          "text": "先切換下面的型態，記住==固定端不動==、==彎曲方向==與==扭轉差異==。再回到 ANSYS 比對自己的振型。"
+        },
+        {
+          "type": "modes"
+        },
+        {
+          "type": "note",
+          "title": "A～E 是圖例，不是求解的第 1～5 階",
+          "text": "三維模型的不同方向彎曲與扭轉會依頻率交錯排序。請以實際 Tabular Data（表格資料）和動畫確認，不要照抄圖例的先後順序。"
+        },
+        {
           "type": "list",
           "items": [
             "固定位置應是 X = 0 的整個端面；若看見整支樑平移，應先檢查拘束。",
@@ -200,6 +236,13 @@
             "前六階可能包含不同方向的彎曲或扭轉，不預先把所有階數都當成同方向彎曲。",
             "繼續比較 2.5、2、1.5 mm 的網格；這是待執行方案，尚無收斂數據。",
             "求解成功只代表計算完成，還需要物理檢查與網格檢查。"
+          ]
+        },
+        {
+          "type": "checkpoint",
+          "title": "如果整支樑一起漂走，你會先看哪個設定？",
+          "items": [
+            "先看 Fixed Support（固定支撐）是否已啟用，以及 Geometry（幾何）是不是 X = 0 的整個端面。單一一端固定樑若整體自由漂動，需先確認拘束，不是先加更多模態數。"
           ]
         }
       ]
@@ -249,6 +292,18 @@
       "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v242/en/wb_dm/agpbook.html",
       "version": "2024 R2",
       "support": "草圖、尺寸與拉伸等幾何建模工具；教學的尺寸為自訂案例。"
+    },
+    {
+      "title": "Graz University of Technology — Cantilever beam",
+      "url": "https://lampz.tugraz.at/~hadley/memm/mechanics/cbeam.php",
+      "version": "梁理論教材；非 ANSYS 版本限定",
+      "support": "懸臂樑彎曲的邊界條件、解析振型及特徵根。互動繪圖依此式計算。"
+    },
+    {
+      "title": "ANSYS / Cornell — Cantilever Beam Modal Analysis: Pre-Analysis",
+      "url": "https://innovationspace.ansys.com/courses/courses/cantilever-beam-modal-analysis/lessons/pre-analysis-start-up-lesson-2-32/topic/pre-analysis/",
+      "version": "原廠梁理論課程；非 2024 R2 操作介面",
+      "support": "Euler–Bernoulli 彎曲振型與理論預估；本網站未使用課程的範例頻率作為自身結果。"
     }
   ],
   "related": [
